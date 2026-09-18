@@ -11,6 +11,7 @@ Depends:
 Imports:
 	quanteda (>= 4.0.0),
   wordvector (>= 0.6.4),
+  data.table,
   proxyC,
   Matrix,
   stringi
