@@ -1,0 +1,51 @@
+<HEADLINE>
+Angst und Freiheit im Internet
+<P>
+Anfang dieses Monats wurde bekannt, dass Microsoft auf Wunsch der chinesischen Führung die Webseite eines chinesischen Bloggers eingestellt hatte, die sich auf einem Server des Microsoft-Dienstes MSN Spaces befand.
+Der Blogger Zhao Jing hatte über einen Journalistenstreik bei The Beijing News berichtet, nachdem der liberal orientierte Herausgeber des Blattes entlassen wurde.
+<P>
+Diese Aktion Microsofts wirft eine Schlüsselfrage auf: Kann das Internet wirklich zu einem Medium der Freiheit werden, das repressive Regierungen nicht so leicht kontrollieren können wie Zeitungen, Radio und Fernsehen?
+<P>
+Ironischerweise ist gerade der Gründer Microsofts, Bill Gates, ein enthusiastischer Verfechter dieser Sichtweise.
+Erst letzten Oktober äußerte er sich folgendermaßen: „Heute gibt es im weiteren Sinne wirklich keine Möglichkeit, Information zu unterdrücken und ich halte das für einen wunderbaren Fortschritt, über den wir uns freuen können.
+Das Internet ist ein Medium der totalen Offenheit und Freiheit und darum auch so einzigartig.”
+<P>
+Trotz dieser Beteuerungen hilft Microsoft den chinesischen Behörden nach Kräften, Information zu unterdrücken.
+Eine Microsoft-Sprecherin soll gesagt haben, dass ihr Unternehmen in China „viele Seiten“ gesperrt habe und dass es seit Monaten bekannt wäre, dass Microsofts Blog-Tool in China Wörter wie „Demokratie” und „Menschenrechte“ aus Blogtiteln herausfiltern würde.
+<P>
+Microsoft rechtfertigt sich damit, dass man „lokale und internationale Gesetze” einhalten müsse.
+Allerdings befinden sich die von MSN Spaces gehosteten Seiten auf Servern in den Vereinigten Staaten.
+Darum wären die entsprechend zu befolgenden Gesetze auch diejenigen der USA und Zhao Jings Beitrag über den Journalistenstreik in Peking verletzt kein einziges dieser Gesetze.
+<P>
+Darüber hinaus gibt es auch kein internationales Gesetz, das den Chinesen verbieten würde, über Ereignisse zu diskutieren, die ihre Regierung lieber nicht diskutiert sehen will.
+Der New York Times beispielsweise steht es frei, Berichte über den Streik zu veröffentlichen, obwohl sie eine Webseite unterhält, die jeder Mensch mit uneingeschränktem Internetzugang lesen kann.
+Wenn die chinesische Führung verhindern will, dass ihre Bürger ausländische Zeitungen lesen, liegt es an ihr, herauszufinden, wie man die Menschen daran hindern könnte.
+Die Zeitung ist in keiner Weise verpflichtet, der chinesischen Regierung diese Arbeit abzunehmen.
+<P>
+Die Rechtfertigung von Microsoft ist daher ein Schlag ins Wasser.
+Wir können über die wahren Beweggründe des Unternehmens, die Webseite zu schließen, nur spekulieren, aber Angst vor den Folgewirkungen auf seine kommerziellen Interessen in China scheinen ein wichtiger Faktor gewesen zu sein.
+<P>
+Natürlich kann und soll ein Konzern die Nutzung seiner Dienste beschränken.
+Der absolutistische Anspruch von der uneingeschränkten Meinungsfreiheit bröckelt angesichts unerfreulicher Beispiele.
+Laut Gates könnte Microsoft die Nutzung seiner Dienste aus folgenden Gründen verbieten: Wenn diese zur Verbreitung von Anleitungen zum Bau einer Atombombe dienen, wenn dadurch Nazi-Propaganda nach Deutschland gelangt, wo derartiges Material verboten ist, und wenn damit Kinderpornographie verbreitet wird.
+<P>
+Aber wie relevant sind diese Beispiele überhaupt?
+John Stuart Mill argumentiert in seinem klassischen Werk zur Verteidigung der Meinungsfreiheit, Über die Freiheit, dass der wichtigste Grund für Meinungsfreiheit der Wettbewerb zwischen den unterschiedlichsten Meinungen ist und dass eine uneingeschränkte Debatte darüber der beste Weg ist, diese Meinungen auf die Probe zu stellen.
+Wenn der Staat Meinungen vor Kritik schützen will, heißt das, sie zu leblosen, starren Dogmen verkommen zu lassen, ungeachtet dessen ob sie wahr sind oder nicht.
+<P>
+Wenn wir Mill zustimmen, dann fällt nur eines von Gates’ Beispielen in eine Kategorie von Meinungsäußerungen, die es zu schützen gilt.
+Bauanleitungen für Atombomben sind Verfahrensbeschreibungen und keine Meinungen.
+Ebenso wenig handelt es sich bei Kinderpornographie um die Äußerung von Meinungen.
+Wir können daher beides beschränken, ohne Mills Argumentation zu widersprechen.
+(Andererseits wäre ein Aufsatz, in dem steht, dass mit Erwachsenen, die ein sexuelles Interesse an Kindern haben, alles in Ordnung ist, eine Meinungsäußerung, die deshalb auch nicht zensuriert werden sollte, egal für wie bösartig wir diese Gedanken auch halten.)
+<P>
+Das problematischste unter den drei von Gates genannten Beispielen ist das über Nazi-Propaganda auf einer an Deutschland gerichteten Webseite.
+Es liegt auf der Hand, warum Deutschland derartige Äußerungen verbieten möchte.
+In mehreren Ländern gibt es Gesetze, die Anstiftung zu Rassenhass verbieten.
+Im Einklang mit Mills Verteidigung der Freiheit sind derartige Gesetze gerechtfertigt, wenn sie sich ganz spezifisch auf die Anstiftung zu Hass und nicht auf die Unterdrückung von Argumenten beziehen, die – so übel diese auch sein mögen –an die intellektuellen Fähigkeiten der Menschen gerichtet sind.
+<P>
+Verfechter eines Verbots von Nazi-Äußerungen könnten argumentieren, dass Derartiges zur Schaffung einer besseren Gesellschaft bereits probiert wurde und – in der entsetzlichsten vorstellbaren Weise – gescheitert ist.
+Dennoch wäre das beste Zeichen, dass Deutschland seine Nazi-Vergangenheit überwunden hat, dass sich die Gesetze des Landes spezifisch gegen die Anstiftung zu Rassenhass wenden und weniger gegen den Nazismus als solchen.
+<P>
+Jedenfalls ist das harte Durchgreifen Chinas gegen die direkte Berichterstattung und Diskussion von Ereignissen in diesem Land keine Unterdrückung einer diskreditierten politischen Ideologie, sondern einer offenen und informierten politischen Debatte.
+Wenn Bill Gates meint, das Internet sollte ein Freiheit bringendes Medium werden, dann sollte er sicherstellen, dass Microsoft nicht die Drecksarbeit der chinesischen Regierung erledigt.

@@ -1,0 +1,49 @@
+<HEADLINE>
+Fear and Freedom on the Internet
+<P>
+Earlier this month it was reported that, at the request of China’s rulers, Microsoft shut down the Web site of a Chinese blogger that was maintained on a Microsoft service called MSN Spaces.
+The blogger, Zhao Jing, had been reporting on a strike by journalists at The Beijing News that followed the dismissal of the newspaper’s independent-minded editor.
+<P>
+Microsoft’s action raises a key question: can the Internet really be a force for freedom that repressive governments cannot control as easily as newspapers, radio, and television?
+<P>
+Ironically, Microsoft’s founder and chairman, Bill Gates, has been an enthusiastic advocate of this view.
+Just last October, he said: “There’s really no way to, in a broad sense, repress information today, and I think that’s a wonderful advance we can all feel good about….[T]his is a medium of total openness and total freedom, and that’s what makes it so special.”
+<P>
+Despite these sentiments, Microsoft is helping the Chinese authorities to repress information as best they can.
+A Microsoft spokeswoman was reported as saying that the corporation has blocked “many sites” in China, and it has been known for several months that Microsoft’s blog tool in China filters words like “democracy” and “human rights” from blog titles.
+<P>
+Microsoft’s defense is that it must “comply with local and global laws.”
+But the MSN Spaces sites are maintained on servers in the United States.
+The relevant local laws would therefore seem to be those of the US, and Zhao Jing’s discussion of the Beijing journalists’ strike does not violate any of them.
+<P>
+Nor are there any global laws that prevent Chinese people from discussing events that their government would prefer them not to discuss.
+The New York Times, for example, is free to publish its report on the strike, even though it operates a Web site that anyone with unfettered Internet access can read.
+If the Chinese government does not want its citizens to read a foreign newspaper,then it is up to them to figure out how to block access to it.
+The newspaper is under no obligation to do it for them.
+<P>
+So Microsoft’s defense misfires.
+We can only guess at the company’s real reason for taking down the Web site, but fear of repercussions against its commercial interests in China seems likely to have been an important factor.
+<P>
+To be sure, a corporation can and should place limits on the use of its services.
+The absolutist line – let complete freedom of expression prevail – crumbles in the face of uncomfortable examples.
+According to Gates, Microsoft might prevent the use of its services to spread instructions about making nuclear bombs, to send pro-Nazi statements into Germany, where such material is illegal, and to propagate child pornography.
+<P>
+But how relevant are such examples?
+In his classic defense of freedom of expression, On Liberty, John Stuart Mill argued that the most important reason for freedom of expression is to promote competition between the widest possible range of ideas, and that unfettered debate is the best way to test them.
+For the government to protect ideas from criticism is to turn them into a lifeless and rigid dogma, regardless of whether they are true.
+<P>
+If we agree with Mill, then only one of Gates’s examples falls into the category of expression that should be protected.
+Recipes for making nuclear bombs are techniques, not ideas.
+Nor is child pornography the expression of ideas.
+We may therefore restrict both of them without running afoul of Mill’s argument.
+(On the other hand, an essay arguing that there is nothing wrong with adults taking a sexual interest in children, and that such conduct should be permitted, expresses ideas, and thus should not be censored, no matter how poisonous we may consider them.)
+<P>
+The most difficult of Gates’s three examples is that of pro-Nazi statements on a Web site aimed at Germany.
+It is easy to understand why Germany would wish to prohibit such statements.
+Several countries’ laws proscribe incitement of racial hatred, which can be justified, consistently with Mill’s defense of liberty, if such laws really focus narrowly on incitement of hatred rather than on suppressing arguments, bad as they may be, that appeal to people’s intellectual capacities.
+<P>
+A defender of suppression of Nazi ideas might argue that have already been tried, and have failed – in the most horrendous manner imaginable – to produce a better society.
+Nevertheless, the best possible sign that Germany has overcome its Nazi past would be to focus its laws specifically on incitement to racial hatred, rather than on Nazism as such.
+<P>
+In any case, China’s crackdown on straightforward reporting and discussion of events taking place in that country is not the suppression of a discredited political ideology, but of open and informed political debate.
+If Bill Gates really believes that the Internet should be a liberating force, he should ensure that Microsoft does not do the dirty work of China’s government.
