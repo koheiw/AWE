@@ -37,6 +37,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   w <- head(names(sort(wov$frequency, decreasing = TRUE)), vocab_size)
   sim <- proxyC::simil(wov$value$word[a,], wov$value$word[w,], rank = max_anchors,
                        min_simil = min_simil)
+  sigma <- get_sigma(wov$value$word[a,])
 
   # link words to tags
   tri <- Matrix::mat2triplet(sim)
@@ -51,13 +52,15 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   # map <- subset(map, weight > q)
 
   map <- map[order(map$tag, map$freq),]
-  attr(map, "sigma") <- get_sigma(wov$value$word[a,])
+  attr(map, "k") <- dim
+  attr(map, "lang") <- lang
+  attr(map, "sigma") <- sigma
   rownames(map) <- NULL
 
   g <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))
   message(msg(" ...mapped %s words to %s anchors (sigma: %s)",
               length(unique(map$word)), length(unique(map$tag)),
-              mean(attr(map, "sigma"))))
+              attr(map, "sigma")))
   message(msg(" ...saving map (%s)", g))
   saveRDS(map, g)
 
