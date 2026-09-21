@@ -37,7 +37,6 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   w <- head(names(sort(wov$frequency, decreasing = TRUE)), vocab_size)
   sim <- proxyC::simil(wov$value$word[a,], wov$value$word[w,], rank = max_anchors,
                        min_simil = min_simil)
-  sigma <- get_sigma(wov$value$word[a,])
 
   # link words to tags
   tri <- Matrix::mat2triplet(sim)
@@ -54,13 +53,12 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   map <- map[order(map$tag, map$freq),]
   attr(map, "k") <- dim
   attr(map, "lang") <- lang
-  attr(map, "sigma") <- sigma
   rownames(map) <- NULL
 
   g <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))
   message(msg(" ...mapped %s words to %s anchors (sigma: %s)",
               length(unique(map$word)), length(unique(map$tag)),
-              attr(map, "sigma")))
+              sd(map$weight)))
   message(msg(" ...saving map (%s)", g))
   saveRDS(map, g)
 
@@ -74,11 +72,11 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   return(invisible(f))
 }
 
-get_sigma <- function(x) {
-  sim <- as.matrix(proxyC::simil(x, sparse = FALSE))
-  diag(sim) <- NA
-  mean(apply(sim, 1, sd, na.rm = TRUE))
-}
+# get_sigma <- function(x) {
+#   sim <- as.matrix(proxyC::simil(x, sparse = FALSE))
+#   diag(sim) <- NA
+#   sd(sim, na.rm = TRUE)
+# }
 
 #' Train aligned word embeddings
 #' All the values should be the same as in `prep_data()`.
