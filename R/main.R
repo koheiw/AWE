@@ -45,21 +45,19 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
                     weight = tri$x, row.names = NULL)
   map$freq <- wov$frequency[map$word]
 
-  v <- get_variance(wov$value$word[a,])
-  message(msg(" ...the mean variance for anchors is %s", mean(v)))
-
   # limit the size of vocabulary
   # w <- aggregate(weight ~ word, map, max)$weight
   # q <- quantile(w, 1 - pmin(vocab_size / length(w), 1))
   # map <- subset(map, weight > q)
 
   map <- map[order(map$tag, map$freq),]
-  attr(map, "variance") <- v
+  attr(map, "sigma") <- get_sigma(wov$value$word[a,])
   rownames(map) <- NULL
 
   g <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))
-  message(msg(" ...mapped %s words to %s anchors",
-              length(unique(map$word)), length(unique(map$tag))))
+  message(msg(" ...mapped %s words to %s anchors (sigma: %s)",
+              length(unique(map$word)), length(unique(map$tag)),
+              mean(attr(map, "sigma"))))
   message(msg(" ...saving map (%s)", g))
   saveRDS(map, g)
 
@@ -73,10 +71,10 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   return(invisible(f))
 }
 
-get_variance <- function(x) {
+get_sigma <- function(x) {
   sim <- as.matrix(proxyC::simil(x, sparse = FALSE))
   diag(sim) <- NA
-  mean(apply(sim, 1, var, na.rm = TRUE))
+  mean(apply(sim, 1, sd, na.rm = TRUE))
 }
 
 #' Train aligned word embeddings
