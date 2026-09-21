@@ -32,7 +32,8 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
     stop("word must be a named vector")
 
   # cluster words
-  wov <- wordvector::textmodel_word2vec(data, dim, type = "sg", verbose = TRUE)
+  wov <- wordvector::textmodel_word2vec(data, dim, verbose = TRUE,
+                                        type = getOption("AWE.model.type", "sg"))
   a <- anchor[anchor %in% names(wov$frequency)]
   w <- head(names(sort(wov$frequency, decreasing = TRUE)), vocab_size)
   sim <- proxyC::simil(wov$value$word[a,], wov$value$word[w,], rank = max_anchors,
@@ -106,7 +107,8 @@ train_models <- function(lang, dir, dim = 100) {
     as.tokens_xptr(readRDS(f))
   }))
   toks0 <- tokens_sample(toks0, verbose = FALSE) # randomize
-  wov0 <- wordvector::textmodel_word2vec(toks0, dim, type = "sg", verbose = TRUE)
+  wov0 <- wordvector::textmodel_word2vec(toks0, dim, verbose = TRUE,
+                                         type = getOption("AWE.model.type", "sg"))
 
   for (i in seq_len(nrow(param))) {
     p <- param[i,]
