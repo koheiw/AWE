@@ -45,12 +45,16 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
                     weight = tri$x, row.names = NULL)
   map$freq <- wov$frequency[map$word]
 
+  v <- get_variance(wov$value$word[a,])
+  message(msg(" ...the mean variance for anchors is %s", mean(v)))
+
   # limit the size of vocabulary
   # w <- aggregate(weight ~ word, map, max)$weight
   # q <- quantile(w, 1 - pmin(vocab_size / length(w), 1))
   # map <- subset(map, weight > q)
 
   map <- map[order(map$tag, map$freq),]
+  attr(map, "variance") <- v
   rownames(map) <- NULL
 
   g <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))
@@ -67,6 +71,12 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   message(msg(" ...saving tokens (%s)", f))
   saveRDS(as.tokens(toks), f)
   return(invisible(f))
+}
+
+get_variance <- function(x) {
+  sim <- as.matrix(proxyC::simil(x, sparse = FALSE))
+  diag(sim) <- NA
+  mean(apply(sim, 1, var, na.rm = TRUE))
 }
 
 #' Train aligned word embeddings
