@@ -12,7 +12,8 @@ prep_data(
   dim = 100,
   vocab_size = 20000,
   min_simil = 0,
-  max_anchors = 10
+  max_anchors = 10,
+  compound = TRUE
 )
 }
 \arguments{
@@ -26,9 +27,11 @@ prep_data(
 
 \item{dim}{the size of the word vectors.}
 
-\item{limit}{the minimum similarity to anchor words.}
+\item{min_simil}{the minimum similarity to anchor words.}
 
-\item{n}{the maximum number of anchors for each word.}
+\item{max_anchors}{the maximum number of anchors for each word.}
+
+\item{compound}{if \code{TRUE}, return the}
 }
 \value{
 an invisible path to the resulting data file.

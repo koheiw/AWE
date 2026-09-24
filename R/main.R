@@ -14,7 +14,6 @@
 prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
                       min_simil = 0, max_anchors = 10, compound = TRUE) {
 
-  anchor <- check_character(anchor)
   lang <- check_character(lang, min_len = 1, max_len = 1)
 
   message(msg("Mapping words to anchors (%s)", lang))
@@ -40,11 +39,12 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
     anchor[] <- stringi::stri_replace_all_fixed(anchor, " ", concatenator(data))
 
   if (is.null(names(anchor)))
-    stop("word must be a named vector")
+    stop("anchor must be a named vector")
 
   # cluster words
   wov <- wordvector::textmodel_word2vec(data, dim, verbose = TRUE,
-                                        type = getOption("AWE.model.type", "sg"))
+                                        iter = getOption("AWE.word2vec.iter", 10),
+                                        type = getOption("AWE.word2vec.type", "sg"))
   a <- anchor[anchor %in% names(wov$frequency)]
   w <- head(names(sort(wov$frequency, decreasing = TRUE)), vocab_size)
   sim <- proxyC::simil(wov$value$word[a,], wov$value$word[w,], rank = max_anchors,
@@ -119,7 +119,8 @@ train_models <- function(lang, dir, dim = 100) {
   }))
   toks0 <- tokens_sample(toks0, verbose = FALSE) # randomize
   wov0 <- wordvector::textmodel_word2vec(toks0, dim, verbose = TRUE,
-                                         type = getOption("AWE.model.type", "sg"))
+                                         iter = getOption("AWE.word2vec.iter", 10),
+                                         type = getOption("AWE.word2vec.type", "sg"))
 
   for (i in seq_len(nrow(param))) {
     p <- param[i,]
