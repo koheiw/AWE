@@ -19,7 +19,7 @@ prep_data(
 \arguments{
 \item{data}{a \link[quanteda:tokens]{quanteda::tokens} object.}
 
-\item{anchor}{words used as anchors to align embeddings}
+\item{anchor}{words used as anchors to align embeddings.}
 
 \item{lang}{a language code of the documents in \code{data}.}
 
@@ -33,7 +33,9 @@ prep_data(
 
 \item{max_anchors}{the maximum number of anchors for each word.}
 
-\item{compound}{if \code{TRUE}, return the}
+\item{compound}{if \code{TRUE}, compound multi-word expressions in \code{data} using
+\code{anchor}. When \code{lang} is one of "zh", "zh_cn", "zh_tw", "ja", \code{quanteda::tokens()}
+is applied to \code{anchor} to detect boundaries.}
 }
 \value{
 an invisible path to the resulting data file.

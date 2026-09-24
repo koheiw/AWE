@@ -1,14 +1,16 @@
 #' Prepare data for training word embeddings
 #' @param data a [quanteda::tokens] object.
 #' @param lang a language code of the documents in `data`.
-#' @param dir the path a directory to data and embeddings
-#' @param anchor words used as anchors to align embeddings
+#' @param dir the path a directory to data and embeddings.
+#' @param anchor words used as anchors to align embeddings.
 #' @param dir the path to a directory in which models will be saved.
 #' @param vocab_size the number of unique types of words in resulting embeddings.
 #' @param dim the size of the word vectors.
 #' @param min_simil the minimum similarity to anchor words.
 #' @param max_anchors the maximum number of anchors for each word.
-#' @param compound if `TRUE`, return the
+#' @param compound if `TRUE`, compound multi-word expressions in `data` using
+#'   `anchor`. When `lang` is one of "zh", "zh_cn", "zh_tw", "ja", `quanteda::tokens()`
+#'   is applied to `anchor` to detect boundaries.
 #' @returns an invisible path to the resulting data file.
 #' @export
 #' @import quanteda
@@ -77,7 +79,10 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 
   map <- map[order(map$tag, map$freq),]
   attr(map, "k") <- dim
-  attr(map, "lang") <- lang
+  attr(map, "language") <- lang
+  #attr(map, "vocab_size") <- vocab_size
+  #attr(map, "min_simil") <- min_simil
+  #attr(map, "version") <- utils::packageVersion("AWE")
   rownames(map) <- NULL
 
   g <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))
