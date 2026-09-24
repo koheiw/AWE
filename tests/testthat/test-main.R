@@ -117,10 +117,9 @@ test_that("train_models works", {
 
   expect_error(
     train_models(lang = c("en", "ja"), dir = d),
-    "does not exist"
+    "Cannot find tokens"
   )
 
-  dir.create(d, FALSE, TRUE)
   expect_error(
     train_models(lang = "", dir = d),
     "The value of lang must be between 1 and 10 character"
@@ -129,6 +128,11 @@ test_that("train_models works", {
   expect_error(
     train_models(lang = c("en", "ja"), dim = "xxx", dir = d),
     "dim must be coercible to integer"
+  )
+
+  expect_error(
+    train_models(lang = c("en", "ja"), dir = tempfile()),
+    "does not exist"
   )
 })
 
