@@ -5,13 +5,17 @@
 #' @param anchor words used as anchors to align models.
 #' @param dir the path to a directory in which models will be saved.
 #' @param dim the size of the word vectors.
-#' @param limit the minimum similarity to anchor words.
-#' @param n the maximum number of anchors for each word.
+#' @param min_simil the minimum similarity to anchor words.
+#' @param max_anchors the maximum number of anchors for each word.
+#' @param compound if `TRUE`, return the
 #' @returns an invisible path to the resulting data file.
 #' @export
 #' @import quanteda
 prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
-                      min_simil = 0, max_anchors = 10) {
+                      min_simil = 0, max_anchors = 10, compound = TRUE) {
+
+  anchor <- check_character(anchor)
+  lang <- check_character(lang, min_len = 1, max_len = 1)
 
   message(msg("Mapping words to anchors (%s)", lang))
 
@@ -23,7 +27,14 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   }
 
   data <- as.tokens_xptr(data)
-  data <- tokens_compound(data, phrase(anchor), verbose = FALSE)
+  if (compound) {
+    if (lang %in% c("zh", "ja")) {
+      a <- as.list(tokens(anchor, verbose = FALSE))
+    } else {
+      a <- phrase(anchor)
+    }
+    data <- tokens_compound(data, a, verbose = FALSE)
+  }
 
   if (concatenator(data) != " ")
     anchor[] <- stringi::stri_replace_all_fixed(anchor, " ", concatenator(data))
