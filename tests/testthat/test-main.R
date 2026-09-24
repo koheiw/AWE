@@ -95,9 +95,26 @@ test_that("combine works", {
 
 })
 
-test_that("prep_data works", {
+test_that("train_models works", {
+
+  skip_on_cran()
+
+  withr::local_options(list(AWE.word2vec.iter = 1,
+                            AWE.word2vec.verbose = FALSE))
 
   d <- tempfile()
+
+  f <- prep_data(toks_test, data_anchors_topics$en, "en", dir = d)
+  expect_true(
+    is.tokens(readRDS(f))
+  )
+
+  g <- train_models(lang = "en", dir = d)
+  expect_identical(
+    class(readRDS(g)),
+    c("textmodel_word2vec", "textmodel_wordvector")
+  )
+
   expect_error(
     train_models(lang = c("en", "ja"), dir = d),
     "does not exist"
