@@ -14,7 +14,17 @@
 prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
                       min_simil = 0, max_anchors = 10, compound = TRUE) {
 
-  lang <- check_character(lang, min_len = 1, max_len = 1)
+  if (!is.tokens(data))
+    stop("data must be a tokens object")
+  if (!is.character(anchor) || is.null(names(anchor)))
+    stop("anchor must be a named character vector")
+
+  lang <- check_character(lang, min_nchar = 1, max_nchar = 10)
+  dim <- check_integer(dim)
+  vocab_size <- check_integer(vocab_size)
+  min_simil <- check_double(min_simil, min = 0, max = 1)
+  max_anchors <- check_integer(max_anchors, min = 1, max = 100)
+  compound <- check_logical(compound)
 
   message(msg("Mapping words to anchors (%s)", lang))
 
@@ -38,11 +48,11 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   if (concatenator(data) != " ")
     anchor[] <- stringi::stri_replace_all_fixed(anchor, " ", concatenator(data))
 
-  if (is.null(names(anchor)))
-    stop("anchor must be a named vector")
+  # NOTE: consider using tokens_annotate() to insert tags.
 
   # cluster words
-  wov <- wordvector::textmodel_word2vec(data, dim, verbose = TRUE,
+  wov <- wordvector::textmodel_word2vec(data, dim,
+                                        verbose = getOption("AWE.word2vec.verbose", TRUE),
                                         iter = getOption("AWE.word2vec.iter", 10),
                                         type = getOption("AWE.word2vec.type", "sg"))
   a <- anchor[anchor %in% names(wov$frequency)]
@@ -99,10 +109,14 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 #' @import quanteda
 train_models <- function(lang, dir, dim = 100) {
 
+  if (!dir.exists(dir))
+    stop(dir, " does not exist")
+  lang <- check_character(lang, min_len = 1, max_len = 1000, min_nchar = 1, max_nchar = 10)
+  dim <- check_integer(dim)
+
   message(msg("Training aligned models (%s)", paste0(lang, collapse = ", ")))
   param <- expand.grid(lang = lang, dim = dim)
 
-  dir.create(dir, showWarnings = FALSE, recursive = TRUE)
   file <- file.path(dir, paste0("word2vec_", param$lang, "_k", param$dim, ".rds"))
   if (length(file) && all(file.exists(file))) {
     message(msg("Abort (%s contains all the models)", dir))
@@ -118,7 +132,8 @@ train_models <- function(lang, dir, dim = 100) {
     as.tokens_xptr(readRDS(f))
   }))
   toks0 <- tokens_sample(toks0, verbose = FALSE) # randomize
-  wov0 <- wordvector::textmodel_word2vec(toks0, dim, verbose = TRUE,
+  wov0 <- wordvector::textmodel_word2vec(toks0, dim,
+                                         verbose = getOption("AWE.word2vec.verbose", TRUE),
                                          iter = getOption("AWE.word2vec.iter", 10),
                                          type = getOption("AWE.word2vec.type", "sg"))
 

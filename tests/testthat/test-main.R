@@ -11,9 +11,72 @@ toks_test <- tokens(corp_test, remove_punct = TRUE,
              tokens_remove(stopwords("en"), min_nchar = 2) |>
              tokens_subset(min_ntoken = 2)
 
+test_that("prep_data works", {
+
+  d <- tempfile()
+
+  expect_error(
+    prep_data(list(), data_anchors_topics$en, "en", dir = d),
+    "data must be a tokens object"
+  )
+
+  expect_error(
+    prep_data(toks_test, data_anchors_topics["en"], "en", dir = d),
+    "anchor must be a named character vector"
+  )
+
+  expect_error(
+    prep_data(toks_test, data_anchors_topics$en, c("en", "ja"), dir = d),
+    "The length of lang must be 1"
+  )
+
+  expect_error(
+    prep_data(toks_test, data_anchors_topics$en, "", dir = d),
+    "The value of lang must be between 1 and 10 character"
+  )
+
+  expect_error(
+    prep_data(toks_test, data_anchors_topics$en, "en", dir = d,
+              dim = "xxx"),
+    "dim must be coercible to integer"
+  )
+
+  expect_error(
+    prep_data(toks_test, data_anchors_topics$en, "en", dir = d,
+              dim = "xxx"),
+    "dim must be coercible to integer"
+  )
+
+  expect_error(
+    prep_data(toks_test, data_anchors_topics$en, "en", dir = d,
+              vocab_size = "xxx"),
+    "vocab_size must be coercible to integer"
+  )
+
+  expect_error(
+    prep_data(toks_test, data_anchors_topics$en, "en", dir = d,
+              min_simil = -1),
+    "The value of min_simil must be between 0 and 1"
+  )
+
+  expect_error(
+    prep_data(toks_test, data_anchors_topics$en, "en", dir = d,
+              max_anchors = 0),
+    "The value of max_anchors must be between 1 and 100"
+  )
+
+  expect_error(
+    prep_data(toks_test, data_anchors_topics$en, "en", dir = d,
+              compound = NULL),
+    "compound cannot be NULL"
+  )
+
+})
+
 test_that("combine works", {
 
-  withr::local_options(list(AWE.word2vec.iter = 1))
+  withr::local_options(list(AWE.word2vec.iter = 1,
+                            AWE.word2vec.verbose = FALSE))
 
   d <- tempfile()
   prep_data(toks_test, data_anchors_topics$en, "en", dir = d)
@@ -30,5 +93,25 @@ test_that("combine works", {
     "social_media" %in% map2$word
   )
 
+})
+
+test_that("prep_data works", {
+
+  d <- tempfile()
+  expect_error(
+    train_models(lang = c("en", "ja"), dir = d),
+    "does not exist"
+  )
+
+  dir.create(d, FALSE, TRUE)
+  expect_error(
+    train_models(lang = "", dir = d),
+    "The value of lang must be between 1 and 10 character"
+  )
+
+  expect_error(
+    train_models(lang = c("en", "ja"), dim = "xxx", dir = d),
+    "dim must be coercible to integer"
+  )
 })
 
