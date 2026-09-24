@@ -5,9 +5,7 @@
 \alias{data_corpus_commentary_en}
 \alias{data_corpus_commentary_de}
 \alias{data_corpus_commentary_ja}
-\title{Parallel corpus of news commentary
-Paragraphs in the corpus are aligned with the English version to allow direct
-comparison of texts across languages.}
+\title{Parallel corpora of news commentary}
 \format{
 An object of class \code{corpus} (inherits from \code{character}) of length 824.
 
@@ -26,7 +24,6 @@ data_corpus_commentary_de
 data_corpus_commentary_ja
 }
 \description{
-Parallel corpus of news commentary
 Paragraphs in the corpus are aligned with the English version to allow direct
 comparison of texts across languages.
 }

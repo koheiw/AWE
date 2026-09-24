@@ -3,9 +3,7 @@
 \docType{data}
 \name{data_lexicon_muse}
 \alias{data_lexicon_muse}
-\title{MUSE bilingual dictionaries
-Ground-truth bilingual dictionaries from the Multilingual Unsupervised and
-Supervised Embeddings (MUSE).}
+\title{MUSE bilingual dictionaries}
 \format{
 An object of class \code{list} of length 2.
 }
@@ -16,7 +14,6 @@ https://github.com/facebookresearch/MUSE
 data_lexicon_muse
 }
 \description{
-MUSE bilingual dictionaries
 Ground-truth bilingual dictionaries from the Multilingual Unsupervised and
 Supervised Embeddings (MUSE).
 }
