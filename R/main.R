@@ -1,9 +1,10 @@
 #' Prepare data for training word embeddings
 #' @param data a [quanteda::tokens] object.
 #' @param lang a language code of the documents in `data`.
-#' @param dir the path to the data directory.
-#' @param anchor words used as anchors to align models.
+#' @param dir the path a directory to data and embeddings
+#' @param anchor words used as anchors to align embeddings
 #' @param dir the path to a directory in which models will be saved.
+#' @param vocab_size the number of unique types of words in resulting embeddings.
 #' @param dim the size of the word vectors.
 #' @param min_simil the minimum similarity to anchor words.
 #' @param max_anchors the maximum number of anchors for each word.
@@ -11,6 +12,8 @@
 #' @returns an invisible path to the resulting data file.
 #' @export
 #' @import quanteda
+#' @importFrom utils head
+#' @importFrom stats sd
 prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
                       min_simil = 0, max_anchors = 10, compound = TRUE) {
 
@@ -62,9 +65,9 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 
   # link words to tags
   tri <- Matrix::mat2triplet(sim)
-  map <- data.frame(tag = paste0("#", names(a))[tri$i],
-                    word = colnames(sim)[tri$j],
-                    weight = tri$x, row.names = NULL)
+  map <- data.frame("tag" = paste0("#", names(a))[tri$i],
+                    "word" = colnames(sim)[tri$j],
+                    "weight" = tri$x, row.names = NULL)
   map$freq <- wov$frequency[map$word]
 
   # limit the size of vocabulary

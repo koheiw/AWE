@@ -69,6 +69,6 @@ identical(stri_sub(docnames(data_corpus_commentary_en), 4, -1),
 identical(stri_sub(docnames(data_corpus_commentary_en), 4, -1),
           stri_sub(docnames(data_corpus_commentary_ja), 4, -1))
 
-save(data_corpus_commentary_en, file = "data/data_corpus_commentary_en.rda")
-save(data_corpus_commentary_de, file = "data/data_corpus_commentary_de.rda")
-save(data_corpus_commentary_ja, file = "data/data_corpus_commentary_ja.rda")
+usethis::use_data(data_corpus_commentary_en, overwrite = TRUE)
+usethis::use_data(data_corpus_commentary_de, overwrite = TRUE)
+usethis::use_data(data_corpus_commentary_ja, overwrite = TRUE)

@@ -4,7 +4,8 @@
 \name{data_lexicon_muse}
 \alias{data_lexicon_muse}
 \title{MUSE bilingual dictionaries
-Ground-truth bilingual dictionaries from the Multilingual Unsupervised and Supervised Embeddings (MUSE).}
+Ground-truth bilingual dictionaries from the Multilingual Unsupervised and
+Supervised Embeddings (MUSE).}
 \format{
 An object of class \code{list} of length 2.
 }
@@ -16,6 +17,7 @@ data_lexicon_muse
 }
 \description{
 MUSE bilingual dictionaries
-Ground-truth bilingual dictionaries from the Multilingual Unsupervised and Supervised Embeddings (MUSE).
+Ground-truth bilingual dictionaries from the Multilingual Unsupervised and
+Supervised Embeddings (MUSE).
 }
 \keyword{datasets}

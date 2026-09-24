@@ -19,13 +19,15 @@ prep_data(
 \arguments{
 \item{data}{a \link[quanteda:tokens]{quanteda::tokens} object.}
 
-\item{anchor}{words used as anchors to align models.}
+\item{anchor}{words used as anchors to align embeddings}
 
 \item{lang}{a language code of the documents in \code{data}.}
 
 \item{dir}{the path to a directory in which models will be saved.}
 
 \item{dim}{the size of the word vectors.}
+
+\item{vocab_size}{the number of unique types of words in resulting embeddings.}
 
 \item{min_simil}{the minimum similarity to anchor words.}
 

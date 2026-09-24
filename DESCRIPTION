@@ -1,6 +1,6 @@
 Package: AWE
 Type: Package
-Title: Aligned Word Embeddings using Multilingual Anchors.
+Title: Aligned Word Embeddings based on Multilingual Anchors.
 Version: 0.1.0
 Authors@R: person('Kohei', 'Watanabe', role = c('aut', 'cre', 'cph'), email = 'watanabe.kohei@gmail.com', comment = c(ORCID = '0000-0001-6519-5265'))
 Description: Locally train multilingual word2vec using anchor words.
@@ -14,7 +14,9 @@ Imports:
   data.table,
   proxyC,
   Matrix,
-  stringi
+  stringi,
+  stats,
+  utils
 Suggests: 
   testthat,
   spelling,
@@ -22,5 +24,6 @@ Suggests:
   knitr,
   withr
 Roxygen: list(markdown = TRUE)
+Language: en-US
 LazyData: true
 Config/roxygen2/version: 8.1.0

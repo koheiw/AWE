@@ -11,6 +11,7 @@ An object of class \code{list} of length 3.
 data_anchors_topics
 }
 \description{
-English topic words extracted from newspaper sections. They are machine translated to other languages.
+English topic words extracted from newspaper sections. They are machine
+translated to other languages.
 }
 \keyword{datasets}
