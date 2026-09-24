@@ -37,7 +37,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 
   data <- as.tokens_xptr(data)
   if (compound) {
-    if (lang %in% c("zh", "ja")) {
+    if (lang %in% c("zh", "zh_cn", "zh_tw", "ja")) {
       a <- as.list(tokens(anchor, verbose = FALSE))
     } else {
       a <- phrase(anchor)
