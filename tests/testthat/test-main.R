@@ -111,7 +111,7 @@ test_that("prep_data and train_models work", {
 
   expect_equal(
     names(map),
-    c("tag", "word", "weight", "freq")
+    c("anchor", "word", "weight", "freq")
   )
   expect_equal(
     attr(map, "k"),
