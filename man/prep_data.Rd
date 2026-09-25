@@ -38,7 +38,7 @@ prep_data(
 is applied to \code{anchor} to detect boundaries.}
 }
 \value{
-an invisible path to the resulting data file.
+an invisible path to the resulting mapping file.
 }
 \description{
 Prepare data for training word embeddings

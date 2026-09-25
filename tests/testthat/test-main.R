@@ -107,11 +107,12 @@ test_that("prep_data and train_models work", {
 
   # prepare
   f <- prep_data(toks_test, data_anchors_topics$en, dim = 10, "en", dir = d)
-  expect_true(
-    is.tokens(readRDS(f))
-  )
+  map <- readRDS(f)
 
-  map <- readRDS(file.path(d, "map_en_k10.rds"))
+  expect_equal(
+    names(map),
+    c("tag", "word", "weight", "freq")
+  )
   expect_equal(
     attr(map, "k"),
     10
@@ -124,10 +125,15 @@ test_that("prep_data and train_models work", {
     attr(map, "concatenator"),
     " "
   )
+  expect_equal(
+    attr(map, "version"),
+    utils::packageVersion("AWE")
+  )
 
   # train
   g <- train_models(lang = "en", dir = d, dim = 10)
   wov <- readRDS(g)
+
   expect_identical(
     class(wov),
     c("textmodel_word2vec", "textmodel_wordvector")

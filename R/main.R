@@ -11,7 +11,7 @@
 #' @param compound if `TRUE`, compound multi-word expressions in `data` using
 #'   `anchor`. When `lang` is one of "zh", "zh_cn", "zh_tw", "ja", `quanteda::tokens()`
 #'   is applied to `anchor` to detect boundaries.
-#' @returns an invisible path to the resulting data file.
+#' @returns an invisible path to the resulting mapping file.
 #' @export
 #' @import quanteda
 #' @importFrom utils head
@@ -53,9 +53,9 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   if (concat(data) != " ")
     anchor[] <- stringi::stri_replace_all_fixed(anchor, " ", concat(data))
 
-  # NOTE: consider using tokens_annotate() to insert tags.
+  # NOTE: consider using tokens_annotate() to insert anchor tags.
 
-  # cluster words
+  # cluster words around anchors
   wov <- wordvector::textmodel_word2vec(data, dim,
                                         verbose = getOption("AWE.word2vec.verbose", TRUE),
                                         iter = getOption("AWE.word2vec.iter", 10),
@@ -65,42 +65,37 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   sim <- proxyC::simil(wov$value$word[a,], wov$value$word[w,], rank = max_anchors,
                        min_simil = min_simil)
 
-  # link words to tags
+  # map words to anchors
   tri <- Matrix::mat2triplet(sim)
-  map <- data.frame("tag" = paste0("#", names(a))[tri$i],
+  map <- data.frame("anchor" = paste0("#", names(a))[tri$i],
                     "word" = colnames(sim)[tri$j],
                     "weight" = tri$x, row.names = NULL)
   map$freq <- wov$frequency[map$word]
 
-  # limit the size of vocabulary
-  # w <- aggregate(weight ~ word, map, max)$weight
-  # q <- quantile(w, 1 - pmin(vocab_size / length(w), 1))
-  # map <- subset(map, weight > q)
-
-  map <- map[order(map$tag, map$freq),]
+  map <- map[order(map$anchor, map$freq),]
   attr(map, "k") <- dim
   attr(map, "language") <- lang
   attr(map, "concatenator") <- concat(data)
   #attr(map, "vocab_size") <- vocab_size
   #attr(map, "min_simil") <- min_simil
-  #attr(map, "version") <- utils::packageVersion("AWE")
+  attr(map, "version") <- utils::packageVersion("AWE")
   rownames(map) <- NULL
 
   g <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))
   message(msg(" ...mapped %s words to %s anchors (sigma: %s)",
-              length(unique(map$word)), length(unique(map$tag)),
+              length(unique(map$word)), length(unique(map$anchor)),
               sd(map$weight)))
   message(msg(" ...saving map (%s)", g))
   saveRDS(map, g)
 
-  # convert words to tags
-  lis <- lapply(split(map$word, map$tag), sort)
+  # replace words with anchors
+  lis <- lapply(split(map$word, map$anchor), sort)
   toks <- tokens_lookup(data, dictionary(lis), valuetype = "fixed", verbose = FALSE)
   toks <- tokens(toks, concatenator = "", verbose = FALSE) # to combine tokens
-
   message(msg(" ...saving tokens (%s)", f))
   saveRDS(as.tokens(toks), f)
-  return(invisible(f))
+
+  return(invisible(g))
 }
 
 # get_sigma <- function(x) {
@@ -153,11 +148,11 @@ train_models <- function(lang, dir, dim = 100) {
     map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
     conc <- attr(map, "concatenator")
 
-    map <- subset(map, tag %in% rownames(wov0$values$word))
+    map <- subset(map, anchor %in% rownames(wov0$values$word))
     m <- wov0$values$word
     m <- m / rowSums(abs(m))
-    m <- m[map$tag,] * map$weight
-    m <- group_matrix(m, map$word) # sum over tags
+    m <- m[map$anchor,] * map$weight
+    m <- group_matrix(m, map$word) # sum over anchors
     m <- m / rowSums(abs(m))
 
     message(msg(" ...saving %s model (%s)", p$lang, f))
