@@ -155,13 +155,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
     freq <- get_freq(map)
 
     # create word vectors from anchors
-    map <- map[map$anchor %in% rownames(wov0$values$word),]
-    w <- wov0$values$word
-    w <- w / rowSums(abs(w))
-    w <- w[map$anchor,] * map$weight
-    w <- group_matrix(w, map$word) # sum over anchors
-    w <- w / rowSums(abs(w))
-    wov <- wordvector::as.textmodel_word2vec(w)
+    wov <- wordvector::as.textmodel_word2vec(weight_vector(wov0, map))
     wov$concatenator <- conc # TODO: use dots in as.textmodel_word2vec()
     wov$frequency <- freq
 
@@ -170,4 +164,15 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
   }
   return(invisible(file))
 }
+
+weight_vector <- function(wov, map) {
+  map <- map[map$anchor %in% rownames(wov$values$word),]
+  w <- wov$values$word
+  w <- w / rowSums(abs(w))
+  w <- w[map$anchor,] * map$weight
+  w <- group_matrix(w, map$word) # sum over anchors
+  w <- w / rowSums(abs(w))
+  return(w)
+}
+
 
