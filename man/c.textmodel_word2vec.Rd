@@ -6,6 +6,10 @@
 \usage{
 \method{c}{textmodel_word2vec}(...)
 }
+\value{
+a \link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} object.
+}
 \description{
-Combine aligned word embeddings
+Combine word vectors from multiple objects. When there are common words,
+the vectors are averaged while the frequencies are summed.
 }
