@@ -149,6 +149,7 @@ test_that("prep_data and train_models work", {
     AWE:::get_freq(map)
   )
 
+  # error
   expect_error(
     train_models(lang = c("en", "ja"), dir = d),
     "Cannot find tokens"
@@ -167,6 +168,11 @@ test_that("prep_data and train_models work", {
   expect_error(
     train_models(lang = c("en", "ja"), dir = tempfile()),
     "does not exist"
+  )
+
+  expect_error(
+    train_models(lang = c("en", "ja"), dir = d, sample = 1.5),
+    "The value of sample must be between 0 and 1"
   )
 })
 
