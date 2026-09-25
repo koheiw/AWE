@@ -148,17 +148,17 @@ train_models <- function(lang, dir, dim = 100) {
     map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
     conc <- attr(map, "concatenator")
 
-    map <- subset(map, anchor %in% rownames(wov0$values$word))
-    m <- wov0$values$word
-    m <- m / rowSums(abs(m))
-    m <- m[map$anchor,] * map$weight
-    m <- group_matrix(m, map$word) # sum over anchors
-    m <- m / rowSums(abs(m))
+    # create word vectors from anchors
+    map <- map[map$anchor %in% rownames(wov0$values$word),]
+    w <- wov0$values$word
+    w <- w / rowSums(abs(w))
+    w <- w[map$anchor,] * map$weight
+    w <- group_matrix(w, map$word) # sum over anchors
+    w <- w / rowSums(abs(w))
+    wov <- wordvector::as.textmodel_word2vec(w)
+    wov$concatenator <- conc # TODO: use dots in as.textmodel_word2vec()
 
     message(msg(" ...saving %s model (%s)", p$lang, f))
-
-    wov <- wordvector::as.textmodel_word2vec(m)
-    wov$concatenator <- conc # TODO: use dots in as.textmodel_word2vec()
     saveRDS(wov, f)
   }
   return(invisible(file))
