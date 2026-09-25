@@ -56,22 +56,9 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
     anchor[] <- stringi::stri_replace_all_fixed(anchor, " ", concat(data))
 
   # NOTE: consider using tokens_annotate() to insert anchor tags.
-
-  # cluster words around anchors
   wov <- train_word2vec(data, dim)
-  a <- anchor[anchor %in% names(wov$frequency)]
-  w <- head(names(sort(wov$frequency, decreasing = TRUE)), vocab_size)
-  sim <- proxyC::simil(wov$value$word[a,], wov$value$word[w,],
-                       rank = max_anchors, min_simil = min_simil)
+  map <- create_map(wov, anchor, vocab_size, max_anchors, min_simil)
 
-  # map words to anchors
-  tri <- Matrix::mat2triplet(sim)
-  map <- data.frame("anchor" = paste0("#", names(a))[tri$i],
-                    "word" = colnames(sim)[tri$j],
-                    "weight" = tri$x, row.names = NULL)
-  map$freq <- wov$frequency[map$word]
-
-  map <- map[order(map$anchor, map$freq),]
   attr(map, "k") <- dim
   attr(map, "language") <- lang
   attr(map, "concatenator") <- concat(data)
@@ -145,7 +132,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
 
     # create word vectors from anchors
     map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
-    wov <- wordvector::as.textmodel_word2vec(weight_vector(wov0, map))
+    wov <- as_word2vec(wov0, map)
     wov$concatenator <- attr(map, "concatenator") # TODO: use dots in as.textmodel_word2vec()
     wov$frequency <- get_freq(map)
 
@@ -155,14 +142,14 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
   return(invisible(file))
 }
 
-weight_vector <- function(wov, map) {
+as_word2vec <- function(wov, map) {
   map <- map[map$anchor %in% rownames(wov$values$word),]
   w <- wov$values$word
   w <- w / rowSums(abs(w))
   w <- w[map$anchor,] * map$weight
   w <- group_matrix(w, map$word) # sum over anchors
   w <- w / rowSums(abs(w))
-  return(w)
+  wordvector::as.textmodel_word2vec(w)
 }
 
 train_word2vec <- function(x, dim) {
@@ -171,5 +158,23 @@ train_word2vec <- function(x, dim) {
      iter = getOption("AWE.word2vec.iter", 10),
      type = getOption("AWE.word2vec.type", "sg")
   )
+}
+
+create_map <- function(wov, anchor, vocab_size, max_anchors, min_simil) {
+
+  # cluster words around anchors
+  a <- anchor[anchor %in% names(wov$frequency)]
+  w <- head(names(sort(wov$frequency, decreasing = TRUE)), vocab_size)
+  sim <- proxyC::simil(wov$value$word[a,], wov$value$word[w,],
+                       rank = max_anchors, min_simil = min_simil)
+
+  # map words to anchors
+  tri <- Matrix::mat2triplet(sim)
+  map <- data.frame("anchor" = paste0("#", names(a))[tri$i],
+                    "word" = colnames(sim)[tri$j],
+                    "weight" = tri$x, row.names = NULL)
+  map$freq <- wov$frequency[map$word]
+
+  map[order(map$anchor, map$freq),]
 }
 
