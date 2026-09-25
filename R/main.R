@@ -117,22 +117,22 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
   }
 
   # combine all the objects
-  file0 <- file.path(dir, paste0("tokens_", param$lang, "_k", param$dim, ".rds"))
-  toks0 <- do.call(c, lapply(file0, function(f) {
+  file_ac <- file.path(dir, paste0("tokens_", param$lang, "_k", param$dim, ".rds"))
+  toks_ac <- do.call(c, lapply(file_ac, function(f) {
     if (!file.exists(f))
       stop(msg("Cannot find tokens (%s)", f))
     message(msg(" ...loading data (%s)", f))
     as.tokens_xptr(readRDS(f))
   }))
-  toks0 <- tokens_sample(toks0, ndoc(toks0) * sample, verbose = FALSE) # randomize
-  wov0 <- train_word2vec(toks0, dim)
+  toks_ac <- tokens_sample(toks_ac, ndoc(toks_ac) * sample, verbose = FALSE) # randomize
+  wov_ac <- train_word2vec(toks_ac, dim)
   for (i in seq_len(nrow(param))) {
     p <- param[i,]
     f <- file[i]
 
     # create word vectors from anchors
     map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
-    wov <- as_word2vec(wov0, map)
+    wov <- as_word2vec(wov_ac, map)
     wov$concatenator <- attr(map, "concatenator") # TODO: use dots in as.textmodel_word2vec()
     wov$frequency <- get_freq(map)
 
