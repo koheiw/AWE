@@ -171,15 +171,3 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
   return(invisible(file))
 }
 
-#' Read text fastText or MUSE embedding files
-#' @param file the path to the embedding file.
-#' @details
-#' Files can be downloaded from the [fastText website](https://fasttext.cc/docs/en/aligned-vectors.html).
-#' @export
-#' @return a dense matrix with word vectors in rows
-read_fasttext <- function(file) {
-  tmp <- data.table::fread(file, data.table = FALSE, sep = " ", quote = "", skip = 1)
-  rownames(tmp) <- tmp[,1]
-  as.matrix(tmp[,-1])
-}
-
