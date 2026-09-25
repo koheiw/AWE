@@ -58,14 +58,11 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   # NOTE: consider using tokens_annotate() to insert anchor tags.
 
   # cluster words around anchors
-  wov <- wordvector::textmodel_word2vec(data, dim,
-                                        verbose = getOption("AWE.word2vec.verbose", TRUE),
-                                        iter = getOption("AWE.word2vec.iter", 10),
-                                        type = getOption("AWE.word2vec.type", "sg"))
+  wov <- train_word2vec(data, dim)
   a <- anchor[anchor %in% names(wov$frequency)]
   w <- head(names(sort(wov$frequency, decreasing = TRUE)), vocab_size)
-  sim <- proxyC::simil(wov$value$word[a,], wov$value$word[w,], rank = max_anchors,
-                       min_simil = min_simil)
+  sim <- proxyC::simil(wov$value$word[a,], wov$value$word[w,],
+                       rank = max_anchors, min_simil = min_simil)
 
   # map words to anchors
   tri <- Matrix::mat2triplet(sim)
@@ -141,23 +138,16 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
     as.tokens_xptr(readRDS(f))
   }))
   toks0 <- tokens_sample(toks0, ndoc(toks0) * sample, verbose = FALSE) # randomize
-  wov0 <- wordvector::textmodel_word2vec(toks0, dim,
-                                         verbose = getOption("AWE.word2vec.verbose", TRUE),
-                                         iter = getOption("AWE.word2vec.iter", 10),
-                                         type = getOption("AWE.word2vec.type", "sg"))
-
+  wov0 <- train_word2vec(toks0, dim)
   for (i in seq_len(nrow(param))) {
     p <- param[i,]
     f <- file[i]
 
-    map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
-    conc <- attr(map, "concatenator")
-    freq <- get_freq(map)
-
     # create word vectors from anchors
+    map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
     wov <- wordvector::as.textmodel_word2vec(weight_vector(wov0, map))
-    wov$concatenator <- conc # TODO: use dots in as.textmodel_word2vec()
-    wov$frequency <- freq
+    wov$concatenator <- attr(map, "concatenator") # TODO: use dots in as.textmodel_word2vec()
+    wov$frequency <- get_freq(map)
 
     message(msg(" ...saving %s model (%s)", p$lang, f))
     saveRDS(wov, f)
@@ -175,4 +165,11 @@ weight_vector <- function(wov, map) {
   return(w)
 }
 
+train_word2vec <- function(x, dim) {
+  wordvector::textmodel_word2vec(x, dim,
+     verbose = getOption("AWE.word2vec.verbose", TRUE),
+     iter = getOption("AWE.word2vec.iter", 10),
+     type = getOption("AWE.word2vec.type", "sg")
+  )
+}
 
