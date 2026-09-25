@@ -3,7 +3,7 @@ msg <- function(format, ..., prepend = "", append = "") {
   args <- list(...)
   args <- lapply(args, function(x) {
     if (is.numeric(x)) {
-      prettyNum(x, big.mark = ",", digit = 3)
+      prettyNum(x, big.mark = ",", digits = 3)
     } else {
       as.character(x)
     }
