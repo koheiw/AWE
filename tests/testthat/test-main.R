@@ -7,7 +7,8 @@ corp <- wordvector::data_corpus_news2014
 corp_test <- corpus_reshape(corp)
 
 toks_test <- tokens(corp_test, remove_punct = TRUE,
-                    remove_symbols = TRUE, remove_numbers = TRUE) |>
+                    remove_symbols = TRUE, remove_numbers = TRUE,
+                    concatenator = " ") |>
              tokens_remove(stopwords("en"), min_nchar = 2) |>
              tokens_subset(min_ntoken = 2)
 
@@ -79,23 +80,23 @@ test_that("combine works", {
                             AWE.word2vec.verbose = FALSE))
 
   d <- tempfile()
-  prep_data(toks_test, data_anchors_topics$en, "en", dir = d)
-  map1 <- readRDS(file.path(d, "map_en_k100.rds"))
+  prep_data(toks_test, dim = 10, data_anchors_topics$en, "en", dir = d)
+  map1 <- readRDS(file.path(d, "map_en_k10.rds"))
   expect_true(
-    "social_media" %in% map1$word
+    "social media" %in% map1$word
   )
 
   d <- tempfile()
-  prep_data(toks_test, data_anchors_topics$en, "en", dir = d,
+  prep_data(toks_test, dim = 10, data_anchors_topics$en, "en", dir = d,
             compound = FALSE)
-  map2 <- readRDS(file.path(d, "map_en_k100.rds"))
+  map2 <- readRDS(file.path(d, "map_en_k10.rds"))
   expect_false(
-    "social_media" %in% map2$word
+    "social media" %in% map2$word
   )
 
 })
 
-test_that("train_models works", {
+test_that("prep_data and train_models work", {
 
   skip_on_cran()
 
@@ -104,15 +105,36 @@ test_that("train_models works", {
 
   d <- tempfile()
 
-  f <- prep_data(toks_test, data_anchors_topics$en, "en", dir = d)
+  # prepare
+  f <- prep_data(toks_test, data_anchors_topics$en, dim = 10, "en", dir = d)
   expect_true(
     is.tokens(readRDS(f))
   )
 
-  g <- train_models(lang = "en", dir = d)
+  map <- readRDS(file.path(d, "map_en_k10.rds"))
+  expect_equal(
+    attr(map, "k"),
+    10
+  )
+  expect_equal(
+    attr(map, "language"),
+    "en"
+  )
+  expect_equal(
+    attr(map, "concatenator"),
+    " "
+  )
+
+  # train
+  g <- train_models(lang = "en", dir = d, dim = 10)
+  wov <- readRDS(g)
   expect_identical(
-    class(readRDS(g)),
+    class(wov),
     c("textmodel_word2vec", "textmodel_wordvector")
+  )
+  expect_equal(
+    wov$concatenator,
+    " "
   )
 
   expect_error(

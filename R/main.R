@@ -42,7 +42,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 
   data <- as.tokens_xptr(data)
   if (compound) {
-    if (lang %in% c("zh", "zh_cn", "zh_tw", "ja")) {
+    if (is_cj(lang)) {
       a <- as.list(tokens(anchor, verbose = FALSE))
     } else {
       a <- phrase(anchor)
@@ -50,8 +50,8 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
     data <- tokens_compound(data, a, verbose = FALSE)
   }
 
-  if (concatenator(data) != " ")
-    anchor[] <- stringi::stri_replace_all_fixed(anchor, " ", concatenator(data))
+  if (concat(data) != " ")
+    anchor[] <- stringi::stri_replace_all_fixed(anchor, " ", concat(data))
 
   # NOTE: consider using tokens_annotate() to insert tags.
 
@@ -80,6 +80,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   map <- map[order(map$tag, map$freq),]
   attr(map, "k") <- dim
   attr(map, "language") <- lang
+  attr(map, "concatenator") <- concat(data)
   #attr(map, "vocab_size") <- vocab_size
   #attr(map, "min_simil") <- min_simil
   #attr(map, "version") <- utils::packageVersion("AWE")
@@ -150,8 +151,9 @@ train_models <- function(lang, dir, dim = 100) {
     f <- file[i]
 
     map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
-    map <- subset(map, tag %in% rownames(wov0$values$word))
+    conc <- attr(map, "concatenator")
 
+    map <- subset(map, tag %in% rownames(wov0$values$word))
     m <- wov0$values$word
     m <- m / rowSums(abs(m))
     m <- m[map$tag,] * map$weight
@@ -159,7 +161,9 @@ train_models <- function(lang, dir, dim = 100) {
     m <- m / rowSums(abs(m))
 
     message(msg(" ...saving %s model (%s)", p$lang, f))
+
     wov <- wordvector::as.textmodel_word2vec(m)
+    wov$concatenator <- conc # TODO: use dots in as.textmodel_word2vec()
     saveRDS(wov, f)
   }
   return(invisible(file))
@@ -176,5 +180,4 @@ read_fasttext <- function(file) {
   rownames(tmp) <- tmp[,1]
   as.matrix(tmp[,-1])
 }
-
 

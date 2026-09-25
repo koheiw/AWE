@@ -29,3 +29,8 @@ group_matrix <- function(x, factor) {
   }))
 
 }
+
+
+is_cj <- function(lang) {
+  lang %in% c("zh", "zh_cn", "zh_tw", "ja")
+}
