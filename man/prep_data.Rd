@@ -41,5 +41,5 @@ is applied to \code{anchor} to detect boundaries.}
 an invisible path to the resulting mapping file.
 }
 \description{
-Prepare data for training word embeddings
+Create tokens objects and mapping files for training aligned word embeddings.
 }

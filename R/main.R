@@ -1,4 +1,6 @@
 #' Prepare data for training word embeddings
+#'
+#' Create tokens objects and mapping files for training aligned word embeddings.
 #' @param data a [quanteda::tokens] object.
 #' @param lang a language code of the documents in `data`.
 #' @param dir the path a directory to data and embeddings.
@@ -105,7 +107,8 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 # }
 
 #' Train aligned word embeddings
-#' All the values should be the same as in `prep_data()`.
+#'
+#' Train aligned word embeddings using files produced by `prep_data`.
 #' @param lang language codes for which aligned models are trained.
 #' @param sample the proportion of the corpus used for training.
 #' @inheritParams prep_data

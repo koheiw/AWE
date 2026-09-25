@@ -2,10 +2,9 @@
 % Please edit documentation in R/main.R
 \name{train_models}
 \alias{train_models}
-\title{Train aligned word embeddings
-All the values should be the same as in \code{prep_data()}.}
+\title{Train aligned word embeddings}
 \usage{
-train_models(lang, dir, dim = 100)
+train_models(lang, dir, dim = 100, sample = 0.1)
 }
 \arguments{
 \item{lang}{language codes for which aligned models are trained.}
@@ -13,11 +12,12 @@ train_models(lang, dir, dim = 100)
 \item{dir}{the path to a directory in which models will be saved.}
 
 \item{dim}{the size of the word vectors.}
+
+\item{sample}{the proportion of the corpus used for training.}
 }
 \value{
 a invisible list of paths to the trained models.
 }
 \description{
-Train aligned word embeddings
-All the values should be the same as in \code{prep_data()}.
+Train aligned word embeddings using files produced by \code{prep_data}.
 }
