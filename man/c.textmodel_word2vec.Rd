@@ -6,10 +6,13 @@
 \usage{
 \method{c}{textmodel_word2vec}(...)
 }
+\arguments{
+\item{...}{\link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} objects to combine.}
+}
 \value{
 a \link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} object.
 }
 \description{
-Combine word vectors from multiple objects. When there are common words,
-the vectors are averaged while the frequencies are summed.
+Combine word embeddings from multiple models. When models have the same words,
+their vectors are averaged while frequencies are summed.
 }

@@ -52,8 +52,9 @@ get_freq <- function(x) {
 
 #' Combine aligned word embeddings
 #'
-#' Combine word vectors from multiple objects. When there are common words,
-#' the vectors are averaged while the frequencies are summed.
+#' Combine word embeddings from multiple models. When models have the same words,
+#' their vectors are averaged while frequencies are summed.
+#' @param ... [wordvector::textmodel_word2vec] objects to combine.
 #' @return a [wordvector::textmodel_word2vec] object.
 #' @export
 #' @method c textmodel_word2vec
