@@ -107,16 +107,18 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 #' Train aligned word embeddings
 #' All the values should be the same as in `prep_data()`.
 #' @param lang language codes for which aligned models are trained.
+#' @param sample the proportion of the corpus used for training.
 #' @inheritParams prep_data
 #' @export
 #' @returns a invisible list of paths to the trained models.
 #' @import quanteda
-train_models <- function(lang, dir, dim = 100) {
+train_models <- function(lang, dir, dim = 100, sample = 0.1) {
 
   if (!dir.exists(dir))
     stop(dir, " does not exist")
   lang <- check_character(lang, min_len = 1, max_len = 1000, min_nchar = 1, max_nchar = 10)
   dim <- check_integer(dim)
+  sample <- check_double(sample, min = 0, max = 1)
 
   message(msg("Training aligned models (%s)", paste0(lang, collapse = ", ")))
   param <- expand.grid(lang = lang, dim = dim)
@@ -135,7 +137,7 @@ train_models <- function(lang, dir, dim = 100) {
     message(msg(" ...loading data (%s)", f))
     as.tokens_xptr(readRDS(f))
   }))
-  toks0 <- tokens_sample(toks0, verbose = FALSE) # randomize
+  toks0 <- tokens_sample(toks0, ndoc(toks0) * sample, verbose = FALSE) # randomize
   wov0 <- wordvector::textmodel_word2vec(toks0, dim,
                                          verbose = getOption("AWE.word2vec.verbose", TRUE),
                                          iter = getOption("AWE.word2vec.iter", 10),
@@ -147,6 +149,7 @@ train_models <- function(lang, dir, dim = 100) {
 
     map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
     conc <- attr(map, "concatenator")
+    freq <- get_freq(map)
 
     # create word vectors from anchors
     map <- map[map$anchor %in% rownames(wov0$values$word),]
@@ -157,6 +160,7 @@ train_models <- function(lang, dir, dim = 100) {
     w <- w / rowSums(abs(w))
     wov <- wordvector::as.textmodel_word2vec(w)
     wov$concatenator <- conc # TODO: use dots in as.textmodel_word2vec()
+    wov$frequency <- freq
 
     message(msg(" ...saving %s model (%s)", p$lang, f))
     saveRDS(wov, f)

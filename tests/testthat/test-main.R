@@ -138,9 +138,15 @@ test_that("prep_data and train_models work", {
     class(wov),
     c("textmodel_word2vec", "textmodel_wordvector")
   )
+
   expect_equal(
     wov$concatenator,
     " "
+  )
+
+  expect_equal(
+    wov$frequency,
+    AWE:::get_freq(map)
   )
 
   expect_error(
