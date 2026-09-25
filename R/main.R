@@ -103,6 +103,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
 
   if (!dir.exists(dir))
     stop(dir, " does not exist")
+
   lang <- check_character(lang, min_len = 1, max_len = 1000, min_nchar = 1, max_nchar = 10)
   dim <- check_integer(dim)
   sample <- check_double(sample, min = 0, max = 1)
@@ -133,8 +134,6 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
     # create word vectors from anchors
     map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
     wov <- as_word2vec(wov_ac, map)
-    wov$concatenator <- attr(map, "concatenator") # TODO: use dots in as.textmodel_word2vec()
-    wov$frequency <- get_freq(map)
 
     message(msg(" ...saving %s model (%s)", p$lang, f))
     saveRDS(wov, f)
@@ -144,12 +143,17 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
 
 as_word2vec <- function(wov, map) {
   map <- map[map$anchor %in% rownames(wov$values$word),]
+
   w <- wov$values$word
   w <- w / rowSums(abs(w))
   w <- w[map$anchor,] * map$weight
   w <- group_matrix(w, map$word) # sum over anchors
   w <- w / rowSums(abs(w))
-  wordvector::as.textmodel_word2vec(w)
+
+  wov <- wordvector::as.textmodel_word2vec(w)
+  wov$concatenator <- attr(map, "concatenator")
+  wov$frequency <- get_freq(map) # TODO: use dots in as.textmodel_word2vec()
+  return(wov)
 }
 
 train_word2vec <- function(x, dim) {
