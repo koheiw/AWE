@@ -128,9 +128,9 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
   toks_ac <- tokens_sample(toks_ac, ndoc(toks_ac) * sample, verbose = FALSE) # randomize
   wov_ac <- train_word2vec(toks_ac, dim)
 
-  if (getOption("AWE.save.all", FALSE)) {
-    e <- file.path(dir, paste0("word2vec_", paste(sort(lang), collapse = "+"), "_k",
-                               param$dim, ".rds"))
+  if (getOption("AWE.save.internal", FALSE)) {
+    e <- file.path(dir, paste0("word2vec_", paste0(sort(lang), collapse = "+"),
+                               "_k", dim, "_internal.rds"))
     saveRDS(wov_ac, e)
   }
 
