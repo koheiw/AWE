@@ -127,13 +127,20 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
   }))
   toks_ac <- tokens_sample(toks_ac, ndoc(toks_ac) * sample, verbose = FALSE) # randomize
   wov_ac <- train_word2vec(toks_ac, dim)
+
+  if (getOption("AWE.save.all", FALSE)) {
+    e <- file.path(dir, paste0("word2vec_", paste(sort(lang), collapse = "+"), "_k",
+                               param$dim, ".rds"))
+    saveRDS(wov_ac, e)
+  }
+
   for (i in seq_len(nrow(param))) {
     p <- param[i,]
     f <- file[i]
 
     # create word vectors from anchors
     map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
-    wov <- as_word2vec(wov_ac, map)
+    wov <- create_word2vec(wov_ac, map)
 
     message(msg(" ...saving %s model (%s)", p$lang, f))
     saveRDS(wov, f)
@@ -141,7 +148,15 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
   return(invisible(file))
 }
 
-as_word2vec <- function(wov, map) {
+train_word2vec <- function(x, dim) {
+  wordvector::textmodel_word2vec(x, dim,
+                                 verbose = getOption("AWE.word2vec.verbose", TRUE),
+                                 iter = getOption("AWE.word2vec.iter", 10),
+                                 type = getOption("AWE.word2vec.type", "sg")
+  )
+}
+
+create_word2vec <- function(wov, map) {
   map <- map[map$anchor %in% rownames(wov$values$word),]
 
   w <- wov$values$word
@@ -154,14 +169,6 @@ as_word2vec <- function(wov, map) {
   wov$concatenator <- attr(map, "concatenator")
   wov$frequency <- get_freq(map) # TODO: use dots in as.textmodel_word2vec()
   return(wov)
-}
-
-train_word2vec <- function(x, dim) {
-  wordvector::textmodel_word2vec(x, dim,
-     verbose = getOption("AWE.word2vec.verbose", TRUE),
-     iter = getOption("AWE.word2vec.iter", 10),
-     type = getOption("AWE.word2vec.type", "sg")
-  )
 }
 
 create_map <- function(wov, anchor, vocab_size, max_anchors, min_simil) {
