@@ -7,13 +7,14 @@
 \usage{
 \method{c}{textmodel_word2vec}(...)
 
-\method{c}{textmodel_doc2vec}(..., canter = TRUE)
+\method{c}{textmodel_doc2vec}(..., center = TRUE)
 }
 \arguments{
 \item{...}{\link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} or \link[wordvector:textmodel_doc2vec]{wordvector::textmodel_doc2vec}
 objects to combine.}
 
-\item{canter}{if \code{TRUE}, column vectors are centered around the means in each object.}
+\item{center}{if \code{TRUE}, column vectors are adjusted to centered around zero
+in each object.}
 }
 \value{
 a \link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} or \link[wordvector:textmodel_doc2vec]{wordvector::textmodel_doc2vec}

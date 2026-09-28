@@ -82,19 +82,21 @@ c.textmodel_word2vec <- function(...) {
 }
 
 #' @rdname c.textmodel_word2vec
-#' @param canter if `TRUE`, column vectors are centered around the means in each object.
+#' @param center if `TRUE`, column vectors are adjusted to centered around zero
+#'   in each object.
 #' @export
 #' @method c textmodel_doc2vec
-c.textmodel_doc2vec <- function(..., canter = TRUE) {
+c.textmodel_doc2vec <- function(..., center = TRUE) {
 
   lis <- list(...)
 
   if (!all(sapply(lis, is_doc2vec)))
     stop("All the objects must be textmodel_doc2vec")
+  center <- check_logical(center)
 
   v <- do.call(rbind, lapply(lis, function(x) {
     x <- as.matrix(x, normalize = FALSE)
-    if (adjust)
+    if (center)
       x <- t(t(x) - colMeans(x))
     return(x)
   }))

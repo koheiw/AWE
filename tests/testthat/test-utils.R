@@ -105,5 +105,9 @@ test_that("c.textmodel_doc2vec works", {
     c(dov1, dov2, list()),
     "All the objects must be textmodel_doc2vec"
   )
+  expect_error(
+    c(dov1, dov2, center = c(TRUE, FALSE)),
+    "The length of center must be 1"
+  )
 
 })
