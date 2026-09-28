@@ -94,31 +94,39 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 #'
 #' Train aligned word embeddings using files produced by `prep_data`.
 #' @param lang language codes for which aligned models are trained.
+#' @param lang0 language codes on which embeddings are trained. `lang0 = lang`
+#'   by default.
 #' @param sample the proportion of the corpus used for training.
 #' @inheritParams prep_data
 #' @export
 #' @returns a invisible list of paths to the trained models.
 #' @import quanteda
-train_models <- function(lang, dir, dim = 100, sample = 0.1) {
+train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
 
   if (!dir.exists(dir))
     stop(dir, " does not exist")
 
   lang <- check_character(lang, min_len = 1, max_len = 1000, min_nchar = 1, max_nchar = 10)
+  lang0 <- check_character(lang0, min_len = 1, max_len = 1000, min_nchar = 1, max_nchar = 10)
   dim <- check_integer(dim)
   sample <- check_double(sample, min = 0, max = 1)
 
   message(msg("Training aligned models (%s)", paste0(lang, collapse = ", ")))
   param <- expand.grid(lang = lang, dim = dim)
 
-  file <- file.path(dir, paste0("word2vec_", param$lang, "_k", param$dim, ".rds"))
+  #if (getOption("AWE.save.internal", FALSE)) {
+    file <- file.path(dir, paste0("word2vec_", param$lang, "_k", param$dim,
+                                  "_[", paste0(sort(lang0), collapse = "+"), "].rds"))
+  #} else {
+  #  file <- file.path(dir, paste0("word2vec_", param$lang, "_k", param$dim, ".rds"))
+  #}
   if (length(file) && all(file.exists(file))) {
     message(msg("Abort (%s contains all the models)", dir))
     return(invisible(file))
   }
 
   # combine all the objects
-  file_ac <- file.path(dir, paste0("tokens_", param$lang, "_k", param$dim, ".rds"))
+  file_ac <- file.path(dir, paste0("tokens_", lang0, "_k", dim, ".rds"))
   toks_ac <- do.call(c, lapply(file_ac, function(f) {
     if (!file.exists(f))
       stop(msg("Cannot find tokens (%s)", f))
@@ -129,8 +137,8 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1) {
   wov_ac <- train_word2vec(toks_ac, dim)
 
   if (getOption("AWE.save.internal", FALSE)) {
-    e <- file.path(dir, paste0("word2vec_", paste0(sort(lang), collapse = "+"),
-                               "_k", dim, "_internal.rds"))
+    e <- file.path(dir, paste0("word2vec_internal", "_k", dim,
+                               "_[", paste0(sort(lang0), collapse = "+"), "].rds"))
     saveRDS(wov_ac, e)
   }
 

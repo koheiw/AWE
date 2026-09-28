@@ -4,7 +4,7 @@
 \alias{train_models}
 \title{Train aligned word embeddings}
 \usage{
-train_models(lang, dir, dim = 100, sample = 0.1)
+train_models(lang, dir, dim = 100, sample = 0.1, lang0 = lang)
 }
 \arguments{
 \item{lang}{language codes for which aligned models are trained.}
@@ -14,6 +14,9 @@ train_models(lang, dir, dim = 100, sample = 0.1)
 \item{dim}{the size of the word vectors.}
 
 \item{sample}{the proportion of the corpus used for training.}
+
+\item{lang0}{language codes on which embeddings are trained. \code{lang0 = lang}
+by default.}
 }
 \value{
 a invisible list of paths to the trained models.
