@@ -3,4 +3,4 @@ The original English words are machine translated into other langagues using LLM
 Chinese:
 
 Translate inst/achor/en.yml to Simplified Chinese and save as inst/achor/zh_cn.yml.
-Use the original Engish words as the keys in the new YAML file.
+Use the original English words as the keys in the new YAML file.
