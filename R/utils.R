@@ -50,12 +50,14 @@ get_freq <- function(x) {
   structure(x$freq, names = x$word)
 }
 
-#' Combine aligned word embeddings
+#' Combine aligned word and document embeddings
 #'
-#' Combine word embeddings from multiple models. When models have the same words,
+#' Combine embeddings from multiple models. When models have the same words,
 #' their vectors are averaged while frequencies are summed.
-#' @param ... [wordvector::textmodel_word2vec] objects to combine.
-#' @return a [wordvector::textmodel_word2vec] object.
+#' @param ... [wordvector::textmodel_word2vec] or [wordvector::textmodel_doc2vec]
+#'   objects to combine.
+#' @return a [wordvector::textmodel_word2vec] or [wordvector::textmodel_doc2vec]
+#'   object.
 #' @export
 #' @method c textmodel_word2vec
 c.textmodel_word2vec <- function(...) {
@@ -77,6 +79,55 @@ c.textmodel_word2vec <- function(...) {
     wov$frequency <- rowSums(m, na.rm = TRUE)
   }
   return(wov)
+}
+
+#' @rdname c.textmodel_word2vec
+#' @param canter if `TRUE`, column vectors are centered around the means in each object.
+#' @export
+#' @method c textmodel_doc2vec
+c.textmodel_doc2vec <- function(..., canter = TRUE) {
+
+  lis <- list(...)
+
+  if (!all(sapply(lis, is_doc2vec)))
+    stop("All the objects must be textmodel_doc2vec")
+
+  v <- do.call(rbind, lapply(lis, function(x) {
+    x <- as.matrix(x, normalize = FALSE)
+    if (adjust)
+      x <- t(t(x) - colMeans(x))
+    return(x)
+  }))
+
+  # TODO: replace with wordvector::as.textmodel_doc2vec()
+  dov <- as.textmodel_doc2vec(v)
+
+  if (all(sapply(lis, function(x) !is.null(x$frequency)))) {
+    f <- do.call(c, lapply(lis, function(x) names(x$frequency)))
+    f <- unique(f)
+    m <- do.call(cbind, lapply(lis, function(x) x$frequency[f]))
+    rownames(m) <- f
+    dov$frequency <- rowSums(m, na.rm = TRUE)
+  }
+  dov$docvar <- do.call(rbind, lapply(lis, function(x) x$docvars))
+  return(dov)
+}
+
+as.textmodel_doc2vec <- function(x) {
+  result <- list(
+    "values" = list("doc" = x),
+    "weights" = NULL,
+    "dim" = ncol(x),
+    "frequency" = NULL,
+    "tolower" = NULL,
+    "concatenator" = "_",
+    "docvars" = NULL,
+    "normalize" = NULL,
+    "call" = try(match.call(sys.function(-1), call = sys.call(-1)), silent = TRUE),
+    "version" = utils::packageVersion("wordvector")
+  )
+  class(result) <- c("textmodel_doc2vec", "textmodel_wordvector")
+  return(result)
 }
 
 #' Read text fastText or MUSE embedding files
