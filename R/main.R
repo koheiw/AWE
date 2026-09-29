@@ -165,6 +165,8 @@ train_word2vec <- function(x, dim) {
 }
 
 create_word2vec <- function(wov, map) {
+
+  freq <- get_freq(map)
   map <- map[map$anchor %in% rownames(wov$values$word),]
 
   w <- wov$values$word
@@ -175,7 +177,7 @@ create_word2vec <- function(wov, map) {
 
   wov <- wordvector::as.textmodel_word2vec(w)
   wov$concatenator <- attr(map, "concatenator")
-  wov$frequency <- get_freq(map) # TODO: use dots in as.textmodel_word2vec()
+  wov$frequency <- freq # TODO: use dots in as.textmodel_word2vec()
   return(wov)
 }
 
