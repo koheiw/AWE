@@ -48,6 +48,14 @@ test_that("c.textmodel_word2vec works", {
     c("a" = 10, "b" = 10, "c" = 1, "d" = 3, "e" = 2)
   )
 
+  # no centering
+  wov_ad <- c(wov1, wov2, wov3, center = TRUE)
+  wov_na <- c(wov1, wov2, wov3, center = FALSE)
+  expect_false(identical(
+    wov_ad$values$word,
+    wov_na$values$word
+  ))
+
   # errors
   expect_error(
     c(wov1, wov2, list()),
@@ -92,7 +100,7 @@ test_that("c.textmodel_doc2vec works", {
     c("a" = 10, "b" = 10, "c" = 1, "d" = 3, "e" = 2)
   )
 
-  # no adjust
+  # no centering
   dov_ad <- c(dov1, dov2, dov3, center = TRUE)
   dov_na <- c(dov1, dov2, dov3, center = FALSE)
   expect_false(identical(
