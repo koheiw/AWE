@@ -93,8 +93,8 @@ test_that("c.textmodel_doc2vec works", {
   )
 
   # no adjust
-  dov_ad <- c(dov1, dov2, dov3, adjust = TRUE)
-  dov_na <- c(dov1, dov2, dov3, adjust = FALSE)
+  dov_ad <- c(dov1, dov2, dov3, center = TRUE)
+  dov_na <- c(dov1, dov2, dov3, center = FALSE)
   expect_false(identical(
     dov_ad$values$doc,
     dov_na$values$doc
