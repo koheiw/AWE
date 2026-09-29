@@ -60,14 +60,20 @@ get_freq <- function(x) {
 #'   object.
 #' @export
 #' @method c textmodel_word2vec
-c.textmodel_word2vec <- function(...) {
+c.textmodel_word2vec <- function(..., center = TRUE) {
 
   lis <- list(...)
 
   if (!all(sapply(lis, is_word2vec)))
     stop("All the objects must be textmodel_word2vec")
+  center <- check_logical(center)
 
-  v <- do.call(rbind, lapply(lis, as.matrix))
+  v <- do.call(rbind, lapply(lis, function(x) {
+    x <- as.matrix(x, normalize = FALSE)
+    if (center)
+      x <- scale(x, center = TRUE, scale = FALSE)
+    return(x)
+  }))
   v <- group_matrix(v, rownames(v))
   wov <- wordvector::as.textmodel_word2vec(v)
 
@@ -97,7 +103,7 @@ c.textmodel_doc2vec <- function(..., center = TRUE) {
   v <- do.call(rbind, lapply(lis, function(x) {
     x <- as.matrix(x, normalize = FALSE)
     if (center)
-      x <- t(t(x) - colMeans(x))
+      x <- scale(x, center = TRUE, scale = FALSE)
     return(x)
   }))
 
@@ -144,5 +150,12 @@ read_fasttext <- function(file) {
   as.matrix(tmp[,-1])
 }
 
-
+# copy from wordvector
+normalize <- function(x) {
+  s <- rowSums(abs(x))
+  l <- s == 0
+  x <- x / (s / ncol(x))
+  x[l,] <- 0 # replace NA with zero
+  return(x)
+}
 
