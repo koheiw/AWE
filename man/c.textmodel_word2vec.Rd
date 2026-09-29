@@ -2,17 +2,25 @@
 % Please edit documentation in R/utils.R
 \name{c.textmodel_word2vec}
 \alias{c.textmodel_word2vec}
-\title{Combine aligned word embeddings}
+\alias{c.textmodel_doc2vec}
+\title{Combine aligned word and document embeddings}
 \usage{
 \method{c}{textmodel_word2vec}(...)
+
+\method{c}{textmodel_doc2vec}(..., center = TRUE)
 }
 \arguments{
-\item{...}{\link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} objects to combine.}
+\item{...}{\link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} or \link[wordvector:textmodel_doc2vec]{wordvector::textmodel_doc2vec}
+objects to combine.}
+
+\item{center}{if \code{TRUE}, column vectors are adjusted to centered around zero
+in each object.}
 }
 \value{
-a \link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} object.
+a \link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} or \link[wordvector:textmodel_doc2vec]{wordvector::textmodel_doc2vec}
+object.
 }
 \description{
-Combine word embeddings from multiple models. When models have the same words,
+Combine embeddings from multiple models. When models have the same words,
 their vectors are averaged while frequencies are summed.
 }
