@@ -157,11 +157,13 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
   return(invisible(file))
 }
 
+#' @importFrom wordvector textmodel_word2vec
 train_word2vec <- function(x, dim) {
-  wordvector::textmodel_word2vec(x, dim,
-                                 verbose = getOption("AWE.word2vec.verbose", TRUE),
-                                 iter = getOption("AWE.word2vec.iter", 10),
-                                 type = getOption("AWE.word2vec.type", "sg")
+  textmodel_word2vec(x, dim,
+                     tolower = getOption("AWE.word2vec.tolower", TRUE),
+                     verbose = getOption("AWE.word2vec.verbose", TRUE),
+                     iter = getOption("AWE.word2vec.iter", 10),
+                     type = getOption("AWE.word2vec.type", "sg")
   )
 }
 
@@ -177,8 +179,12 @@ create_word2vec <- function(wov, map) {
   w <- normalize(w)
 
   wov <- wordvector::as.textmodel_word2vec(w)
+
+  # TODO: use as.textmodel_word2vec(...)
   wov$concatenator <- attr(map, "concatenator")
-  wov$frequency <- freq # TODO: use dots in as.textmodel_word2vec()
+  wov$frequency <- freq
+  wov$tolower <- getOption("AWE.word2vec.tolower", TRUE)
+
   return(wov)
 }
 
