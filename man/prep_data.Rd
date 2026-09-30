@@ -21,7 +21,8 @@ prep_data(
 
 \item{anchor}{words used as anchors to align embeddings.}
 
-\item{lang}{a language code of the documents in \code{data}.}
+\item{lang}{a language code of the documents in \code{data}. User-defined code is
+accepted because it is used only to create file names for resulting objects.}
 
 \item{dir}{the path to a directory in which models will be saved.}
 
@@ -34,8 +35,8 @@ prep_data(
 \item{max_anchors}{the maximum number of anchors for each word.}
 
 \item{compound}{if \code{TRUE}, compound multi-word expressions in \code{data} using
-\code{anchor}. When \code{lang} is one of "zh", "zh_cn", "zh_tw", "ja", \code{quanteda::tokens()}
-is applied to \code{anchor} to detect boundaries.}
+\code{anchor}. When the concatenation of \code{data} is "", \code{quanteda::tokens()}
+is applied to \code{anchor} to detect word boundaries.}
 }
 \value{
 an invisible path to the resulting mapping file.

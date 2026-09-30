@@ -40,11 +40,6 @@ is_doc2vec <- function(x) {
   identical(class(x), c("textmodel_doc2vec", "textmodel_wordvector"))
 }
 
-
-is_cj <- function(lang) {
-  lang %in% c("zh", "zh_cn", "zh_tw", "ja")
-}
-
 get_freq <- function(x) {
   x <- x[!duplicated(x$word),]
   structure(x$freq, names = x$word)

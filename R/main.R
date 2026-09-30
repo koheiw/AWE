@@ -2,7 +2,8 @@
 #'
 #' Create tokens objects and mapping files for training aligned word embeddings.
 #' @param data a [quanteda::tokens] object.
-#' @param lang a language code of the documents in `data`.
+#' @param lang a language code of the documents in `data`. User-defined code is
+#'   accepted because it is used only to create file names for resulting objects.
 #' @param dir the path a directory to data and embeddings.
 #' @param anchor words used as anchors to align embeddings.
 #' @param dir the path to a directory in which models will be saved.
@@ -11,8 +12,8 @@
 #' @param min_simil the minimum similarity to anchor words.
 #' @param max_anchors the maximum number of anchors for each word.
 #' @param compound if `TRUE`, compound multi-word expressions in `data` using
-#'   `anchor`. When `lang` is one of "zh", "zh_cn", "zh_tw", "ja", `quanteda::tokens()`
-#'   is applied to `anchor` to detect boundaries.
+#'   `anchor`. When the concatenation of `data` is "", `quanteda::tokens()`
+#'   is applied to `anchor` to detect word boundaries.
 #' @returns an invisible path to the resulting mapping file.
 #' @export
 #' @import quanteda
@@ -44,7 +45,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 
   data <- as.tokens_xptr(data)
   if (compound) {
-    if (is_cj(lang)) {
+    if (identical(concat(data), "")) {
       a <- as.list(tokens(anchor, verbose = FALSE))
     } else {
       a <- phrase(anchor)
