@@ -5,9 +5,9 @@
 \alias{c.textmodel_doc2vec}
 \title{Combine aligned word and document embeddings}
 \usage{
-\method{c}{textmodel_word2vec}(..., center = TRUE, scale = FALSE)
+\method{c}{textmodel_word2vec}(..., center = TRUE, scale = TRUE)
 
-\method{c}{textmodel_doc2vec}(..., center = TRUE, scale = FALSE)
+\method{c}{textmodel_doc2vec}(..., center = TRUE, scale = TRUE)
 }
 \arguments{
 \item{...}{\link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} or \link[wordvector:textmodel_doc2vec]{wordvector::textmodel_doc2vec}

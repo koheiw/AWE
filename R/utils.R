@@ -41,7 +41,7 @@ group_matrix <- function(x, factor) {
 #' @export
 #' @method c textmodel_word2vec
 #' @importFrom wordvector as.textmodel_word2vec is_word2vec
-c.textmodel_word2vec <- function(..., center = TRUE, scale = FALSE) {
+c.textmodel_word2vec <- function(..., center = TRUE, scale = TRUE) {
 
   lis <- list(...)
 
@@ -75,7 +75,7 @@ c.textmodel_word2vec <- function(..., center = TRUE, scale = FALSE) {
 #' @export
 #' @method c textmodel_doc2vec
 #' @importFrom wordvector as.textmodel_doc2vec is_doc2vec
-c.textmodel_doc2vec <- function(..., center = TRUE, scale = FALSE) {
+c.textmodel_doc2vec <- function(..., center = TRUE, scale = TRUE) {
 
   lis <- list(...)
 
