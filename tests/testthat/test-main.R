@@ -155,13 +155,13 @@ test_that("prep_data and train_models work", {
 
   # error
   expect_error(
-    train_models(lang = c("en", "ja"), dir = d),
-    "Cannot find tokens"
+    train_models(lang = "", dir = d),
+    "The value of lang must be between 1 and 10 character"
   )
 
   expect_error(
-    train_models(lang = "", dir = d),
-    "The value of lang must be between 1 and 10 character"
+    train_models(lang = c("en", "en"), dir = d),
+    "The values of lang and lang0 must be unique"
   )
 
   expect_error(

@@ -111,6 +111,9 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
   dim <- check_integer(dim)
   sample <- check_double(sample, min = 0, max = 1)
 
+  if (any(duplicated(lang)) || any(duplicated(lang0)))
+    stop("The values of lang and lang0 must be unique")
+
   message(msg("Training aligned models (%s)", paste0(lang, collapse = ", ")))
   param <- expand.grid(lang = lang, dim = dim)
 
@@ -128,19 +131,21 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
   }
 
   # combine all the objects
-  file_ac <- file.path(dir, paste0("tokens_", lang0, "_k", dim, ".rds"))
-  toks_ac <- do.call(c, lapply(file_ac, function(f) {
+  toks <- do.call(c, lapply(lang0, function(l) {
+    f <- file.path(dir, paste0("tokens_", l, "_k", dim, ".rds"))
     if (!file.exists(f))
       stop(msg("Cannot find tokens (%s)", f))
     message(msg(" ...loading data (%s)", f))
-    as.tokens_xptr(readRDS(f))
+    x <- as.tokens_xptr(readRDS(f))
+    docnames(x) <- paste0(l, "_", docnames(x))
+    return(x)
   }))
-  toks_ac <- tokens_sample(toks_ac, ndoc(toks_ac) * sample, verbose = FALSE) # randomize
-  wov_ac <- train_word2vec(toks_ac, dim)
+  toks <- tokens_sample(toks, ndoc(toks) * sample, verbose = FALSE) # randomize
+  wov <- train_word2vec(toks, dim)
 
   if (getOption("AWE.save.internal", FALSE)) {
     e <- file.path(dir, paste0("word2vec_internal", "_k", dim, suffix, ".rds"))
-    saveRDS(wov_ac, e)
+    saveRDS(wov, e)
   }
 
   for (i in seq_len(nrow(param))) {
@@ -149,7 +154,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
 
     # create word vectors from anchors
     map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
-    wov <- create_word2vec(wov_ac, map)
+    wov <- create_word2vec(wov, map)
 
     message(msg(" ...saving %s model (%s)", p$lang, f))
     saveRDS(wov, f)
