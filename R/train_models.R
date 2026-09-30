@@ -70,36 +70,38 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
   return(invisible(file))
 }
 
-#' @importFrom wordvector textmodel_word2vec
 train_word2vec <- function(x, dim) {
-  textmodel_word2vec(x, dim,
-                     tolower = getOption("AWE.word2vec.tolower", TRUE),
-                     verbose = getOption("AWE.word2vec.verbose", TRUE),
-                     iter = getOption("AWE.word2vec.iter", 10),
-                     type = getOption("AWE.word2vec.type", "sg")
+  wordvector::textmodel_word2vec(
+    x,
+    dim,
+    tolower = getOption("AWE.word2vec.tolower", TRUE),
+    verbose = getOption("AWE.word2vec.verbose", TRUE),
+    iter = getOption("AWE.word2vec.iter", 10),
+    type = getOption("AWE.word2vec.type", "sg")
   )
 }
 
-create_word2vec <- function(wov, map) {
+create_word2vec <- function(x, map) {
 
   freq <- get_freq(map)
-  map <- map[map$anchor %in% rownames(wov$values$word),]
+  map <- map[map$anchor %in% rownames(x$values$word),]
 
-  w <- wov$values$word
+  w <- x$values$word
   w <- normalize(w)
   w <- w[map$anchor,] * map$weight
   w <- group_matrix(w, map$word) # sum over anchors
   w <- normalize(w)
 
-  wov <- wordvector::as.textmodel_word2vec(w)
-
-  # TODO: use as.textmodel_word2vec(...)
-  wov$concatenator <- attr(map, "concatenator")
-  wov$frequency <- freq
-  wov$tolower <- getOption("AWE.word2vec.tolower", TRUE)
-
-  return(wov)
+  wordvector::as.textmodel_word2vec(
+    w,
+    frequency = freq,
+    concatenator = attr(map, "concatenator"),
+    tolower <- getOption("AWE.word2vec.tolower", TRUE)
+  )
 }
 
-
+get_freq <- function(x) {
+  x <- x[!duplicated(x$word),]
+  structure(x$freq, names = x$word)
+}
 

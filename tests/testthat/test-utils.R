@@ -70,9 +70,9 @@ test_that("c.textmodel_doc2vec works", {
   mat2 <- matrix(rnorm(12), nrow = 2, dimnames = list(c("doc3", "doc4")))
   mat3 <- matrix(rnorm(12), nrow = 2, dimnames = list(c("doc5", "doc6")))
 
-  dov1 <- AWE:::as.textmodel_doc2vec(mat1)
-  dov2 <- AWE:::as.textmodel_doc2vec(mat2)
-  dov3 <- AWE:::as.textmodel_doc2vec(mat3)
+  dov1 <- wordvector::as.textmodel_doc2vec(mat1)
+  dov2 <- wordvector::as.textmodel_doc2vec(mat2)
+  dov3 <- wordvector::as.textmodel_doc2vec(mat3)
 
   # no frequency
   dov_nf <- c(dov1, dov2, dov3)

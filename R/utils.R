@@ -30,21 +30,6 @@ group_matrix <- function(x, factor) {
 
 }
 
-# copied from wordvector
-is_word2vec <- function(x) {
-  identical(class(x), c("textmodel_word2vec", "textmodel_wordvector"))
-}
-
-# copied from wordvector
-is_doc2vec <- function(x) {
-  identical(class(x), c("textmodel_doc2vec", "textmodel_wordvector"))
-}
-
-get_freq <- function(x) {
-  x <- x[!duplicated(x$word),]
-  structure(x$freq, names = x$word)
-}
-
 #' Combine aligned word and document embeddings
 #'
 #' Combine embeddings from multiple models. When models have the same words,
@@ -55,6 +40,7 @@ get_freq <- function(x) {
 #'   object.
 #' @export
 #' @method c textmodel_word2vec
+#' @importFrom wordvector as.textmodel_word2vec is_word2vec
 c.textmodel_word2vec <- function(..., center = TRUE, scale = FALSE) {
 
   lis <- list(...)
@@ -72,7 +58,7 @@ c.textmodel_word2vec <- function(..., center = TRUE, scale = FALSE) {
   }))
   v <- group_matrix(v, rownames(v))
   v <- normalize(v)
-  wov <- wordvector::as.textmodel_word2vec(v)
+  wov <- as.textmodel_word2vec(v)
 
   if (all(sapply(lis, function(x) !is.null(x$frequency)))) {
     f <- do.call(c, lapply(lis, function(x) names(x$frequency)))
@@ -88,6 +74,7 @@ c.textmodel_word2vec <- function(..., center = TRUE, scale = FALSE) {
 #' @param center,scale `base::scale()` is applied to each object before combining.
 #' @export
 #' @method c textmodel_doc2vec
+#' @importFrom wordvector as.textmodel_doc2vec is_doc2vec
 c.textmodel_doc2vec <- function(..., center = TRUE, scale = FALSE) {
 
   lis <- list(...)
@@ -106,7 +93,7 @@ c.textmodel_doc2vec <- function(..., center = TRUE, scale = FALSE) {
 
   # TODO: replace with wordvector::as.textmodel_doc2vec()
   v <- normalize(v)
-  dov <- as.textmodel_doc2vec(v)
+  dov <- wordvector::as.textmodel_doc2vec(v)
 
   if (all(sapply(lis, function(x) !is.null(x$frequency)))) {
     f <- do.call(c, lapply(lis, function(x) names(x$frequency)))
@@ -117,23 +104,6 @@ c.textmodel_doc2vec <- function(..., center = TRUE, scale = FALSE) {
   }
   dov$docvar <- do.call(rbind, lapply(lis, function(x) x$docvars))
   return(dov)
-}
-
-as.textmodel_doc2vec <- function(x) {
-  result <- list(
-    "values" = list("doc" = x),
-    "weights" = NULL,
-    "dim" = ncol(x),
-    "frequency" = NULL,
-    "tolower" = NULL,
-    "concatenator" = "_",
-    "docvars" = NULL,
-    "normalize" = NULL,
-    "call" = try(match.call(sys.function(-1), call = sys.call(-1)), silent = TRUE),
-    "version" = utils::packageVersion("wordvector")
-  )
-  class(result) <- c("textmodel_doc2vec", "textmodel_wordvector")
-  return(result)
 }
 
 #' Read text fastText or MUSE embedding files
