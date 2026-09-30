@@ -15,8 +15,8 @@ train_models(lang, dir, dim = 100, sample = 0.1, lang0 = lang)
 
 \item{sample}{the proportion of the corpus used for training.}
 
-\item{lang0}{language codes on which embeddings are trained. \code{lang0 = lang}
-by default.}
+\item{lang0}{language codes on which embeddings are trained. If \code{lang0} is not
+equal to \code{lang}, language codes are included in the file names.}
 }
 \value{
 a invisible list of paths to the trained models.
