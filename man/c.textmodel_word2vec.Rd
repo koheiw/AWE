@@ -5,16 +5,15 @@
 \alias{c.textmodel_doc2vec}
 \title{Combine aligned word and document embeddings}
 \usage{
-\method{c}{textmodel_word2vec}(...)
+\method{c}{textmodel_word2vec}(..., center = TRUE, scale = FALSE)
 
-\method{c}{textmodel_doc2vec}(..., center = TRUE)
+\method{c}{textmodel_doc2vec}(..., center = TRUE, scale = FALSE)
 }
 \arguments{
 \item{...}{\link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} or \link[wordvector:textmodel_doc2vec]{wordvector::textmodel_doc2vec}
 objects to combine.}
 
-\item{center}{if \code{TRUE}, column vectors are adjusted to centered around zero
-in each object.}
+\item{center, scale}{\code{base::scale()} is applied to each object before combining.}
 }
 \value{
 a \link[wordvector:textmodel_word2vec]{wordvector::textmodel_word2vec} or \link[wordvector:textmodel_doc2vec]{wordvector::textmodel_doc2vec}

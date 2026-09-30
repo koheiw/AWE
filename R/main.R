@@ -94,8 +94,8 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 #'
 #' Train aligned word embeddings using files produced by `prep_data`.
 #' @param lang language codes for which aligned models are trained.
-#' @param lang0 language codes on which embeddings are trained. `lang0 = lang`
-#'   by default.
+#' @param lang0 language codes on which embeddings are trained. If `lang0` is not
+#'   equal to `lang`, language codes are included in the file names.
 #' @param sample the proportion of the corpus used for training.
 #' @inheritParams prep_data
 #' @export
@@ -114,12 +114,14 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
   message(msg("Training aligned models (%s)", paste0(lang, collapse = ", ")))
   param <- expand.grid(lang = lang, dim = dim)
 
-  #if (getOption("AWE.save.internal", FALSE)) {
-    file <- file.path(dir, paste0("word2vec_", param$lang, "_k", param$dim,
-                                  "_[", paste0(sort(lang0), collapse = "+"), "].rds"))
-  #} else {
-  #  file <- file.path(dir, paste0("word2vec_", param$lang, "_k", param$dim, ".rds"))
-  #}
+  # add lang0 to file names
+  if (!setequal(lang, lang0)) {
+    suffix <- paste0("_[", paste0(sort(lang0), collapse = "+"), "]")
+  } else {
+    suffix <- ""
+  }
+
+  file <- file.path(dir, paste0("word2vec_", param$lang, "_k", param$dim, suffix, ".rds"))
   if (length(file) && all(file.exists(file))) {
     message(msg("Abort (%s contains all the models)", dir))
     return(invisible(file))
@@ -137,8 +139,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
   wov_ac <- train_word2vec(toks_ac, dim)
 
   if (getOption("AWE.save.internal", FALSE)) {
-    e <- file.path(dir, paste0("word2vec_internal", "_k", dim,
-                               "_[", paste0(sort(lang0), collapse = "+"), "].rds"))
+    e <- file.path(dir, paste0("word2vec_internal", "_k", dim, suffix, ".rds"))
     saveRDS(wov_ac, e)
   }
 
@@ -156,11 +157,13 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
   return(invisible(file))
 }
 
+#' @importFrom wordvector textmodel_word2vec
 train_word2vec <- function(x, dim) {
-  wordvector::textmodel_word2vec(x, dim,
-                                 verbose = getOption("AWE.word2vec.verbose", TRUE),
-                                 iter = getOption("AWE.word2vec.iter", 10),
-                                 type = getOption("AWE.word2vec.type", "sg")
+  textmodel_word2vec(x, dim,
+                     tolower = getOption("AWE.word2vec.tolower", TRUE),
+                     verbose = getOption("AWE.word2vec.verbose", TRUE),
+                     iter = getOption("AWE.word2vec.iter", 10),
+                     type = getOption("AWE.word2vec.type", "sg")
   )
 }
 
@@ -170,14 +173,18 @@ create_word2vec <- function(wov, map) {
   map <- map[map$anchor %in% rownames(wov$values$word),]
 
   w <- wov$values$word
-  w <- w / rowSums(abs(w))
+  w <- normalize(w)
   w <- w[map$anchor,] * map$weight
   w <- group_matrix(w, map$word) # sum over anchors
-  w <- w / rowSums(abs(w))
+  w <- normalize(w)
 
   wov <- wordvector::as.textmodel_word2vec(w)
+
+  # TODO: use as.textmodel_word2vec(...)
   wov$concatenator <- attr(map, "concatenator")
-  wov$frequency <- freq # TODO: use dots in as.textmodel_word2vec()
+  wov$frequency <- freq
+  wov$tolower <- getOption("AWE.word2vec.tolower", TRUE)
+
   return(wov)
 }
 

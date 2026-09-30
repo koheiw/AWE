@@ -149,6 +149,10 @@ test_that("prep_data and train_models work", {
     AWE:::get_freq(map)
   )
 
+  expect_true(
+    wov$tolower
+  )
+
   # error
   expect_error(
     train_models(lang = c("en", "ja"), dir = d),
