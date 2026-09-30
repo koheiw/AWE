@@ -60,21 +60,23 @@ get_freq <- function(x) {
 #'   object.
 #' @export
 #' @method c textmodel_word2vec
-c.textmodel_word2vec <- function(..., center = TRUE) {
+c.textmodel_word2vec <- function(..., center = TRUE, scale = FALSE) {
 
   lis <- list(...)
 
   if (!all(sapply(lis, is_word2vec)))
     stop("All the objects must be textmodel_word2vec")
   center <- check_logical(center)
+  scale <- check_logical(scale)
 
   v <- do.call(rbind, lapply(lis, function(x) {
     x <- as.matrix(x, normalize = FALSE)
     if (center)
-      x <- scale(x, center = TRUE, scale = FALSE)
+      x <- scale(x, center = center, scale = scale)
     return(x)
   }))
   v <- group_matrix(v, rownames(v))
+  v <- normalize(v)
   wov <- wordvector::as.textmodel_word2vec(v)
 
   if (all(sapply(lis, function(x) !is.null(x$frequency)))) {
@@ -88,26 +90,27 @@ c.textmodel_word2vec <- function(..., center = TRUE) {
 }
 
 #' @rdname c.textmodel_word2vec
-#' @param center if `TRUE`, column vectors are adjusted to centered around zero
-#'   in each object.
+#' @param center,scale `base::scale()` is applied to each object before combining.
 #' @export
 #' @method c textmodel_doc2vec
-c.textmodel_doc2vec <- function(..., center = TRUE) {
+c.textmodel_doc2vec <- function(..., center = TRUE, scale = FALSE) {
 
   lis <- list(...)
 
   if (!all(sapply(lis, is_doc2vec)))
     stop("All the objects must be textmodel_doc2vec")
   center <- check_logical(center)
+  scale <- check_logical(scale)
 
   v <- do.call(rbind, lapply(lis, function(x) {
     x <- as.matrix(x, normalize = FALSE)
     if (center)
-      x <- scale(x, center = TRUE, scale = FALSE)
+      x <- scale(x, center = center, scale = scale)
     return(x)
   }))
 
   # TODO: replace with wordvector::as.textmodel_doc2vec()
+  v <- normalize(v)
   dov <- as.textmodel_doc2vec(v)
 
   if (all(sapply(lis, function(x) !is.null(x$frequency)))) {
