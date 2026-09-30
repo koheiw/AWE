@@ -32,6 +32,11 @@ test_that("prep_data works", {
   )
 
   expect_error(
+    prep_data(toks_test, data_anchors_topics$ja, "en", dir = d),
+    "Failed to map words to anchors"
+  )
+
+  expect_error(
     prep_data(toks_test, data_anchors_topics$en, "", dir = d),
     "The value of lang must be between 1 and 10 character"
   )
