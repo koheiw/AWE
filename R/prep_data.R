@@ -37,7 +37,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   message(msg("Mapping words to anchors (%s)", lang))
 
   dir.create(dir, showWarnings = FALSE, recursive = TRUE)
-  f <- file.path(dir, paste0("tokens_", lang, "_k", dim, ".rds"))
+  f <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))
   if (file.exists(f)) {
     message(msg("Abort (%s already exists)", f))
     return(invisible(f))
@@ -70,19 +70,20 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   attr(map, "version") <- utils::packageVersion("AWE")
   rownames(map) <- NULL
 
-  g <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))
   message(msg(" ...mapped %s words to %s anchors (n: %s, sigma: %s)",
               length(unique(map$word)), length(unique(map$anchor)),
               nrow(map), sd(map$weight)))
-  message(msg(" ...saving map (%s)", g))
-  saveRDS(map, g)
+  message(msg(" ...saving map (%s)", f))
+  saveRDS(map, f)
 
   # replace words with anchors
   lis <- lapply(split(map$word, map$anchor), sort)
   toks <- tokens_lookup(data, dictionary(lis), valuetype = "fixed", verbose = FALSE)
   toks <- tokens(toks, concatenator = "", verbose = FALSE) # to combine tokens
-  message(msg(" ...saving tokens (%s)", f))
-  saveRDS(as.tokens(toks), f)
+
+  g <- file.path(dir, paste0("tokens_", lang, "_k", dim, ".rds"))
+  message(msg(" ...saving tokens (%s)", g))
+  saveRDS(as.tokens(toks), g)
 
   return(invisible(f))
 }

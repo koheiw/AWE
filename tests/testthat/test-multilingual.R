@@ -23,7 +23,7 @@ test_that("prep_data works", {
   )
   expect_match(
     f_en,
-    "tokens_en_k100.rds", fixed = TRUE
+    "map_en_k100.rds", fixed = TRUE
   )
   expect_message(
     prep_data(toks_en, data_anchors_topics$en, lang = "en", dir = d),
@@ -37,7 +37,7 @@ test_that("prep_data works", {
   )
   expect_match(
     f_de,
-    "tokens_de_k100.rds", fixed = TRUE
+    "map_de_k100.rds", fixed = TRUE
   )
   expect_message(
     prep_data(toks_de, data_anchors_topics$de, lang = "de", dir = d),
@@ -51,7 +51,7 @@ test_that("prep_data works", {
   )
   expect_match(
     f_ja,
-    "tokens_ja_k100.rds", fixed = TRUE
+    "map_ja_k100.rds", fixed = TRUE
   )
   expect_message(
     prep_data(toks_ja, data_anchors_topics$ja, lang = "ja", dir = d),
