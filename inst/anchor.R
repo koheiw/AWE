@@ -1,4 +1,4 @@
-lang <- c("en", "de", "ja", "zh_cn")
+lang <- c("en", "de", "ja", "zh_cn", "id", "ms", "vi")
 
 data_anchors_topics <- lapply(lang, function(l) {
     v <- unlist(yaml::read_yaml(file.path("inst/anchor", paste0(l, ".yml"))))
