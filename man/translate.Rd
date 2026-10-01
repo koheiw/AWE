@@ -4,14 +4,16 @@
 \alias{translate}
 \title{Find semantically equivalent words across languages}
 \usage{
-translate(x, ..., n = 10)
+translate(x, ..., n = 10, source = 1)
 }
 \arguments{
-\item{x}{the word vector of a word to translate.}
+\item{x}{a word to translate.}
 
 \item{...}{aligned word embedding models.}
 
 \item{n}{the number of words to be returned.}
+
+\item{the}{index of the model from which a word vector for \code{x} is extracted.}
 }
 \description{
 Find semantically equivalent words across languages

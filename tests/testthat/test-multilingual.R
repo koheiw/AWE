@@ -79,8 +79,7 @@ test_that("train_models works", {
   )
 
   # translate
-  wov_en <- readRDS(f1[1])
-  tra1 <- translate(wov_en$values$word["war",],
+  tra1 <- translate("war",
                     en = readRDS(f1[1]),
                     de = readRDS(f1[2]),
                     ja = readRDS(f1[3]), n = 15)
@@ -112,11 +111,10 @@ test_that("train_models works", {
   )
 
   # translate
-  wov_ja <- readRDS(f1[3])
-  tra2 <- translate(wov_ja$values$word["女性",],
+  tra2 <- translate("女性",
                     en = readRDS(f2[1]),
                     de = readRDS(f2[2]),
-                    ja = readRDS(f2[3]), n = 15)
+                    ja = readRDS(f2[3]), n = 15, source = 3)
 
   expect_equal(
     colnames(tra2),
