@@ -84,7 +84,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   message(msg(" ...saving tokens (%s)", f))
   saveRDS(as.tokens(toks), f)
 
-  return(invisible(g))
+  return(invisible(f))
 }
 
 # get_sigma <- function(x) {
