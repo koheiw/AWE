@@ -22,7 +22,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
   if (any(duplicated(lang)) || any(duplicated(lang0)))
     stop("The values of lang and lang0 must be unique")
 
-  message(msg("Training aligned models (%s)", paste0(lang, collapse = ", ")))
+  message(msg("Training embeddings with anchors (%s)", paste0(lang, collapse = ", ")))
   param <- expand.grid(lang = lang, dim = dim)
 
   # add lang0 to file names
@@ -61,11 +61,11 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
     f <- file[i]
 
     # create word vectors from anchors
-    map <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
-    wov <- create_word2vec(wov, map)
+    m <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
+    w <- create_word2vec(wov, m)
 
     message(msg(" ...saving %s model (%s)", p$lang, f))
-    saveRDS(wov, f)
+    saveRDS(w, f)
   }
   return(invisible(file))
 }
