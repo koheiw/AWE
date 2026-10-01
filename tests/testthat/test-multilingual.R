@@ -66,7 +66,7 @@ test_that("train_models works", {
                             AWE.word2vec.verbose = FALSE))
 
   expect_message(
-    f1 <- train_models(c("en", "de", "ja"), dir = d),
+    f1 <<- train_models(c("en", "de", "ja"), dir = d),
     "Training embeddings with anchors (en, de, ja)", fixed = TRUE
   )
   expect_message(
@@ -77,6 +77,24 @@ test_that("train_models works", {
     f1,
     "word2vec_(en|de|ja)_k100.rds",
   )
+
+  # use lang0
+  expect_message(
+    f2 <<- train_models(c("en", "de", "ja"), dir = d, lang0 = c("en", "de")),
+    "Training embeddings with anchors (en, de, ja)", fixed = TRUE
+  )
+  expect_match(
+    f2,
+    "word2vec_(en|de|ja)_k100_\\[de\\+en\\].rds",
+  )
+  expect_message(
+    train_models(c("en", "de", "ja"), dir = d, lang0 = c("en", "de")),
+    paste0("Abort (", d, " contains all the models)"), fixed = TRUE
+  )
+
+})
+
+test_that("translate works", {
 
   # translate
   tra1 <- translate("war",
@@ -96,21 +114,6 @@ test_that("train_models works", {
     is.character(tra1)
   )
 
-  # use lang0
-  expect_message(
-    f2 <- train_models(c("en", "de", "ja"), dir = d, lang0 = c("en", "de")),
-    "Training embeddings with anchors (en, de, ja)", fixed = TRUE
-  )
-  expect_match(
-    f2,
-    "word2vec_(en|de|ja)_k100_\\[de\\+en\\].rds",
-  )
-  expect_message(
-    train_models(c("en", "de", "ja"), dir = d, lang0 = c("en", "de")),
-    paste0("Abort (", d, " contains all the models)"), fixed = TRUE
-  )
-
-  # translate
   tra2 <- translate("女性",
                     en = readRDS(f2[1]),
                     de = readRDS(f2[2]),
@@ -128,6 +131,19 @@ test_that("train_models works", {
     is.character(tra2)
   )
 
-})
+  # error
+  expect_error(
+    translate("xxxx", readRDS(f2[1])),
+    '"xxxx" is not found'
+  )
+  expect_error(
+    translate("woman", readRDS(f2[1]), source = -1),
+    "The value of source must be between 1 and 1"
+  )
+  expect_error(
+    translate("woman", readRDS(f2[1]), list(), source = 2),
+    "All the objects must be textmodel_word2vec"
+  )
 
+})
 

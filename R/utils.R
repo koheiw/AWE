@@ -139,10 +139,10 @@ translate <- function(x, ..., n = 10, source = 1) {
   lis <- list(...)
 
   x <- check_character(x)
-  source <- check_integer(source, max = length(lis))
+  source <- check_integer(source, min = 1, max = length(lis))
 
   if (!all(sapply(lis, wordvector::is_word2vec)))
-    stop("all the objects must be textmodel_word2vec")
+    stop("All the objects must be textmodel_word2vec")
   if (!x %in% rownames(lis[[source]]$values$word))
     stop('"', x, '" is not found')
 
