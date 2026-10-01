@@ -13,7 +13,7 @@ translate(x, ..., n = 10, source = 1)
 
 \item{n}{the number of words to be returned.}
 
-\item{the}{index of the model from which a word vector for \code{x} is extracted.}
+\item{source}{the model from which the word vector of \code{x} is extracted.}
 }
 \description{
 Find semantically equivalent words across languages
