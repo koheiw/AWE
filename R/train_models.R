@@ -45,10 +45,11 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
       stop(msg("Cannot find tokens (%s)", f))
     message(msg(" ...loading data (%s)", f))
     x <- as.tokens_xptr(readRDS(f))
+    x <- tokens_sample(x, ndoc(x) * sample, verbose = FALSE)
     docnames(x) <- paste0(l, "_", docnames(x))
     return(x)
   }))
-  toks <- tokens_sample(toks, ndoc(toks) * sample, verbose = FALSE) # randomize
+  toks <- tokens_sample(toks, ndoc(toks), verbose = FALSE) # randomize
   wov <- train_word2vec(toks, dim)
 
   if (getOption("AWE.save.internal", FALSE)) {
