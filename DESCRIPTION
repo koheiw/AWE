@@ -10,7 +10,7 @@ Depends:
     R (>= 3.5.0)
 Imports:
 	quanteda (>= 4.0.0),
-  wordvector (>= 0.6.4),
+  wordvector (>= 0.6.5),
   data.table,
   proxyC,
   Matrix,

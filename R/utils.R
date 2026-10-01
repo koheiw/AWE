@@ -30,44 +30,35 @@ group_matrix <- function(x, factor) {
 
 }
 
-# copied from wordvector
-is_word2vec <- function(x) {
-  identical(class(x), c("textmodel_word2vec", "textmodel_wordvector"))
-}
-
-# copied from wordvector
-is_doc2vec <- function(x) {
-  identical(class(x), c("textmodel_doc2vec", "textmodel_wordvector"))
-}
-
-
-is_cj <- function(lang) {
-  lang %in% c("zh", "zh_cn", "zh_tw", "ja")
-}
-
-get_freq <- function(x) {
-  x <- x[!duplicated(x$word),]
-  structure(x$freq, names = x$word)
-}
-
-#' Combine aligned word embeddings
+#' Combine aligned word and document embeddings
 #'
-#' Combine word embeddings from multiple models. When models have the same words,
+#' Combine embeddings from multiple models. When models have the same words,
 #' their vectors are averaged while frequencies are summed.
-#' @param ... [wordvector::textmodel_word2vec] objects to combine.
-#' @return a [wordvector::textmodel_word2vec] object.
+#' @param ... [wordvector::textmodel_word2vec] or [wordvector::textmodel_doc2vec]
+#'   objects to combine.
+#' @return a [wordvector::textmodel_word2vec] or [wordvector::textmodel_doc2vec]
+#'   object.
 #' @export
 #' @method c textmodel_word2vec
-c.textmodel_word2vec <- function(...) {
+#' @importFrom wordvector as.textmodel_word2vec is_word2vec
+c.textmodel_word2vec <- function(..., center = TRUE, scale = TRUE) {
 
   lis <- list(...)
 
   if (!all(sapply(lis, is_word2vec)))
     stop("All the objects must be textmodel_word2vec")
+  center <- check_logical(center)
+  scale <- check_logical(scale)
 
-  v <- do.call(rbind, lapply(lis, as.matrix))
+  v <- do.call(rbind, lapply(lis, function(x) {
+    x <- as.matrix(x, normalize = FALSE)
+    if (center)
+      x <- scale(x, center = center, scale = scale)
+    return(x)
+  }))
   v <- group_matrix(v, rownames(v))
-  wov <- wordvector::as.textmodel_word2vec(v)
+  v <- normalize(v)
+  wov <- as.textmodel_word2vec(v)
 
   if (all(sapply(lis, function(x) !is.null(x$frequency)))) {
     f <- do.call(c, lapply(lis, function(x) names(x$frequency)))
@@ -77,6 +68,42 @@ c.textmodel_word2vec <- function(...) {
     wov$frequency <- rowSums(m, na.rm = TRUE)
   }
   return(wov)
+}
+
+#' @rdname c.textmodel_word2vec
+#' @param center,scale `base::scale()` is applied to each object before combining.
+#' @export
+#' @method c textmodel_doc2vec
+#' @importFrom wordvector as.textmodel_doc2vec is_doc2vec
+c.textmodel_doc2vec <- function(..., center = TRUE, scale = TRUE) {
+
+  lis <- list(...)
+
+  if (!all(sapply(lis, is_doc2vec)))
+    stop("All the objects must be textmodel_doc2vec")
+  center <- check_logical(center)
+  scale <- check_logical(scale)
+
+  v <- do.call(rbind, lapply(lis, function(x) {
+    x <- as.matrix(x, normalize = FALSE)
+    if (center)
+      x <- scale(x, center = center, scale = scale)
+    return(x)
+  }))
+
+  # TODO: replace with wordvector::as.textmodel_doc2vec()
+  v <- normalize(v)
+  dov <- wordvector::as.textmodel_doc2vec(v)
+
+  if (all(sapply(lis, function(x) !is.null(x$frequency)))) {
+    f <- do.call(c, lapply(lis, function(x) names(x$frequency)))
+    f <- unique(f)
+    m <- do.call(cbind, lapply(lis, function(x) x$frequency[f]))
+    rownames(m) <- f
+    dov$frequency <- rowSums(m, na.rm = TRUE)
+  }
+  dov$docvar <- do.call(rbind, lapply(lis, function(x) x$docvars))
+  return(dov)
 }
 
 #' Read text fastText or MUSE embedding files
@@ -91,5 +118,29 @@ read_fasttext <- function(file) {
   as.matrix(tmp[,-1])
 }
 
+# copy from wordvector
+normalize <- function(x) {
+  s <- rowSums(abs(x))
+  l <- s == 0
+  x <- x / (s / ncol(x))
+  x[l,] <- 0 # replace NA with zero
+  return(x)
+}
+
+#' Find semantically equivalent words across languages
+#'
+#' @param x the word vector of a word to translate.
+#' @param ... aligned word embedding models.
+#' @param n the number of words to be returned.
+#' @export
+translate <- function(x, ..., n = 10) {
+  lis <- list(...)
+  sapply(lis, function(y) {
+    if (!wordvector::is_word2vec(y))
+      stop("... must be textmodel_word2vec")
+    sim <- proxyC::simil(y$values$word, rbind(x))
+    head(names(sort(Matrix::rowSums(sim), decreasing = TRUE)), n)
+  })
+}
 
 

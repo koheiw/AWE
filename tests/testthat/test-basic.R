@@ -1,5 +1,4 @@
 library(quanteda)
-library(wordvector)
 library(AWE)
 options(wordvector_threads = 2)
 
@@ -14,6 +13,9 @@ toks_test <- tokens(corp_test, remove_punct = TRUE,
 
 test_that("prep_data works", {
 
+  withr::local_options(list(AWE.word2vec.iter = 1,
+                            AWE.word2vec.verbose = FALSE))
+
   d <- tempfile()
 
   expect_error(
@@ -24,6 +26,16 @@ test_that("prep_data works", {
   expect_error(
     prep_data(toks_test, data_anchors_topics["en"], "en", dir = d),
     "anchor must be a named character vector"
+  )
+
+  expect_error(
+    prep_data(toks_test, unname(data_anchors_topics$en), "en", dir = d),
+    "anchor must be a named character vector"
+  )
+
+  expect_error(
+    prep_data(toks_test, c(x = "xxxx", y = "yyyyy", z = "zzzz"), "en", dir = d),
+    "Failed in mapping words to anchors"
   )
 
   expect_error(
@@ -106,7 +118,10 @@ test_that("prep_data and train_models work", {
   d <- tempfile()
 
   # prepare
-  f <- prep_data(toks_test, data_anchors_topics$en, dim = 10, "en", dir = d)
+  expect_message(
+    f <- prep_data(toks_test, data_anchors_topics$en, dim = 10, "en", dir = d),
+    ""
+  )
   map <- readRDS(f)
 
   expect_equal(
@@ -131,7 +146,10 @@ test_that("prep_data and train_models work", {
   )
 
   # train
-  g <- train_models(lang = "en", dir = d, dim = 10)
+  expect_message(
+    g <- train_models(lang = "en", dir = d, dim = 10),
+    "Training embeddings with anchors"
+  )
   wov <- readRDS(g)
 
   expect_identical(
@@ -149,15 +167,19 @@ test_that("prep_data and train_models work", {
     AWE:::get_freq(map)
   )
 
-  # error
-  expect_error(
-    train_models(lang = c("en", "ja"), dir = d),
-    "Cannot find tokens"
+  expect_true(
+    wov$tolower
   )
 
+  # error
   expect_error(
     train_models(lang = "", dir = d),
     "The value of lang must be between 1 and 10 character"
+  )
+
+  expect_error(
+    train_models(lang = c("en", "en"), dir = d),
+    "The values of lang and lang0 must be unique"
   )
 
   expect_error(
