@@ -60,7 +60,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   wov <- train_word2vec(data, dim)
   map <- create_map(wov, anchor, vocab_size, max_anchors, min_simil)
   if (nrow(map) == 0)
-    stop("Failed to map words to anchors")
+    stop("Failed in mapping words to anchors")
 
   attr(map, "k") <- dim
   attr(map, "language") <- lang

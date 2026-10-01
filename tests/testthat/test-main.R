@@ -27,13 +27,18 @@ test_that("prep_data works", {
   )
 
   expect_error(
-    prep_data(toks_test, data_anchors_topics$en, c("en", "ja"), dir = d),
-    "The length of lang must be 1"
+    prep_data(toks_test, unname(data_anchors_topics$en), "en", dir = d),
+    "anchor must be a named character vector"
   )
 
   expect_error(
-    prep_data(toks_test, data_anchors_topics$ja, "en", dir = d),
-    "Failed to map words to anchors"
+    prep_data(toks_test, c(x = "xxxx", y = "yyyyy", z = "zzzz"), "en", dir = d),
+    "Failed in mapping words to anchors"
+  )
+
+  expect_error(
+    prep_data(toks_test, data_anchors_topics$en, c("en", "ja"), dir = d),
+    "The length of lang must be 1"
   )
 
   expect_error(
