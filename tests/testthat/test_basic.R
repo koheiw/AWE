@@ -14,6 +14,9 @@ toks_test <- tokens(corp_test, remove_punct = TRUE,
 
 test_that("prep_data works", {
 
+  withr::local_options(list(AWE.word2vec.iter = 1,
+                            AWE.word2vec.verbose = FALSE))
+
   d <- tempfile()
 
   expect_error(
@@ -116,7 +119,10 @@ test_that("prep_data and train_models work", {
   d <- tempfile()
 
   # prepare
-  f <- prep_data(toks_test, data_anchors_topics$en, dim = 10, "en", dir = d)
+  expect_message(
+    f <- prep_data(toks_test, data_anchors_topics$en, dim = 10, "en", dir = d),
+    ""
+  )
   map <- readRDS(f)
 
   expect_equal(
@@ -141,7 +147,10 @@ test_that("prep_data and train_models work", {
   )
 
   # train
-  g <- train_models(lang = "en", dir = d, dim = 10)
+  expect_message(
+    g <- train_models(lang = "en", dir = d, dim = 10),
+    "Training embeddings with anchors"
+  )
   wov <- readRDS(g)
 
   expect_identical(
