@@ -71,9 +71,9 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   rownames(map) <- NULL
 
   g <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))
-  message(msg(" ...mapped %s words to %s anchors (sigma: %s)",
+  message(msg(" ...mapped %s words to %s anchors (n: %s, sigma: %s)",
               length(unique(map$word)), length(unique(map$anchor)),
-              sd(map$weight)))
+              nrow(map), sd(map$weight)))
   message(msg(" ...saving map (%s)", g))
   saveRDS(map, g)
 
