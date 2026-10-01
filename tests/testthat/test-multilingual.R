@@ -78,6 +78,25 @@ test_that("train_models works", {
     "word2vec_(en|de|ja)_k100.rds",
   )
 
+  # translate
+  wov_en <- readRDS(f1[1])
+  tra1 <- translate(wov_en$values$word["war",],
+                    en = readRDS(f1[1]),
+                    de = readRDS(f1[2]),
+                    ja = readRDS(f1[3]), n = 15)
+
+  expect_equal(
+    colnames(tra1),
+    c("en", "de", "ja")
+  )
+  expect_equal(
+    dim(tra1),
+    c(15, 3)
+  )
+  expect_true(
+    is.character(tra1)
+  )
+
   # use lang0
   expect_message(
     f2 <- train_models(c("en", "de", "ja"), dir = d, lang0 = c("en", "de")),
@@ -92,5 +111,25 @@ test_that("train_models works", {
     paste0("Abort (", d, " contains all the models)"), fixed = TRUE
   )
 
+  # translate
+  wov_ja <- readRDS(f1[3])
+  tra2 <- translate(wov_ja$values$word["女性",],
+                    en = readRDS(f2[1]),
+                    de = readRDS(f2[2]),
+                    ja = readRDS(f2[3]), n = 15)
+
+  expect_equal(
+    colnames(tra2),
+    c("en", "de", "ja")
+  )
+  expect_equal(
+    dim(tra2),
+    c(15, 3)
+  )
+  expect_true(
+    is.character(tra2)
+  )
+
 })
+
 

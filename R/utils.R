@@ -127,3 +127,20 @@ normalize <- function(x) {
   return(x)
 }
 
+#' Find semantically equivalent words across languages
+#'
+#' @param x the word vector of a word to translate.
+#' @param ... aligned word embedding models.
+#' @param n the number of words to be returned.
+#' @export
+translate <- function(x, ..., n = 10) {
+  lis <- list(...)
+  sapply(lis, function(y) {
+    if (!wordvector::is_word2vec(y))
+      stop("... must be textmodel_word2vec")
+    sim <- proxyC::simil(y$values$word, rbind(x))
+    head(names(sort(Matrix::rowSums(sim), decreasing = TRUE)), n)
+  })
+}
+
+
