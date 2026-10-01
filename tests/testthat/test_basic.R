@@ -1,5 +1,4 @@
 library(quanteda)
-library(wordvector)
 library(AWE)
 options(wordvector_threads = 2)
 
