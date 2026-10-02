@@ -102,7 +102,7 @@ c.textmodel_doc2vec <- function(..., center = TRUE, scale = TRUE) {
     rownames(m) <- f
     dov$frequency <- rowSums(m, na.rm = TRUE)
   }
-  dov$docvar <- do.call(rbind, lapply(lis, function(x) x$docvars))
+  dov$docvars <- do.call(rbind, lapply(lis, function(x) x$docvars))
   return(dov)
 }
 
