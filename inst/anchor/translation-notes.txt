@@ -1,6 +1,9 @@
 The original English words are machine translated into other langagues using LLM
-(Sonnet 5 via Posit Assistant). The folowing prompot is the example for Simplified
-Chinese:
+(Sonnet 5 via Posit Assistant). For example:
 
-Translate inst/achor/en.yml to Simplified Chinese and save as inst/achor/zh_cn.yml.
-Use the original English words as the keys in the new YAML file.
+Translate English words in inst/anchor/en.yml to Simplified Chinese and save as inst/anchor/zh_cn.yml.
+Use the original words as the keys in the new YAML file. Do not read or update other files.
+
+Translate English words in inst/anchor/en.yml to Persian and save as inst/anchor/fa.yml.
+Use the original words as the keys in the new YAML file.
+
