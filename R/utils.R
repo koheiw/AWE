@@ -39,9 +39,9 @@ group_matrix <- function(x, factor) {
 #' @return a [wordvector::textmodel_word2vec] or [wordvector::textmodel_doc2vec]
 #'   object.
 #' @export
-#' @method c textmodel_word2vec
+#' @method rbind textmodel_word2vec
 #' @importFrom wordvector as.textmodel_word2vec is_word2vec
-c.textmodel_word2vec <- function(..., center = TRUE, scale = TRUE) {
+rbind.textmodel_word2vec <- function(..., center = TRUE, scale = TRUE) {
 
   lis <- list(...)
 
@@ -70,12 +70,12 @@ c.textmodel_word2vec <- function(..., center = TRUE, scale = TRUE) {
   return(wov)
 }
 
-#' @rdname c.textmodel_word2vec
+#' @rdname rbind.textmodel_word2vec
 #' @param center,scale `base::scale()` is applied to each object before combining.
 #' @export
-#' @method c textmodel_doc2vec
+#' @method rbind textmodel_doc2vec
 #' @importFrom wordvector as.textmodel_doc2vec is_doc2vec
-c.textmodel_doc2vec <- function(..., center = TRUE, scale = TRUE) {
+rbind.textmodel_doc2vec <- function(..., center = TRUE, scale = TRUE) {
 
   lis <- list(...)
 
