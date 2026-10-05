@@ -52,8 +52,7 @@ rbind.textmodel_word2vec <- function(..., center = TRUE, scale = TRUE) {
 
   v <- do.call(rbind, lapply(lis, function(x) {
     x <- as.matrix(x, normalize = FALSE)
-    if (center)
-      x <- scale(x, center = center, scale = scale)
+    x <- scale(x, center = center, scale = scale)
     return(x)
   }))
   v <- group_matrix(v, rownames(v))
@@ -86,8 +85,7 @@ rbind.textmodel_doc2vec <- function(..., center = TRUE, scale = TRUE) {
 
   v <- do.call(rbind, lapply(lis, function(x) {
     x <- as.matrix(x, normalize = FALSE)
-    if (center)
-      x <- scale(x, center = center, scale = scale)
+    x <- scale(x, center = center, scale = scale)
     return(x)
   }))
 
