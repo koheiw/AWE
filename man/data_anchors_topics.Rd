@@ -3,9 +3,9 @@
 \docType{data}
 \name{data_anchors_topics}
 \alias{data_anchors_topics}
-\title{Multilingual anchor words for news}
+\title{Multilingual anchor words from newspaper}
 \format{
-An object of class \code{list} of length 7.
+An object of class \code{list} of length 10.
 }
 \usage{
 data_anchors_topics

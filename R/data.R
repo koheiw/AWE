@@ -1,4 +1,4 @@
-#' Multilingual anchor words for news
+#' Multilingual anchor words from newspaper
 #'
 #' English topic words extracted from newspaper sections. They are machine
 #' translated to other languages.
