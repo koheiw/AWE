@@ -174,10 +174,10 @@ test_that("prep_data and train_models work", {
 
   # re-train
   file.remove(g)
-  wov_int <- readRDS(file.path(d, "word2vec_internal_k10.rds"))
+  wov_mod <- readRDS(file.path(d, "word2vec_internal_k10.rds"))
 
   expect_message(
-    h <- train_models(lang = "en", dir = d, dim = 10, model = wov_int),
+    h <- train_models(lang = "en", dir = d, dim = 10, model = wov_mod),
     "Training embeddings with anchors"
   )
   wov2 <- readRDS(h)
