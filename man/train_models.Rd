@@ -4,7 +4,7 @@
 \alias{train_models}
 \title{Train aligned word embeddings}
 \usage{
-train_models(lang, dir, dim = 100, sample = 0.1, lang0 = lang)
+train_models(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model = NULL)
 }
 \arguments{
 \item{lang}{language codes for which aligned models are trained.}
@@ -17,6 +17,8 @@ train_models(lang, dir, dim = 100, sample = 0.1, lang0 = lang)
 
 \item{lang0}{language codes on which embeddings are trained. If \code{lang0} is not
 different from \code{lang}, it is included in the file names.}
+
+\item{model}{a trained word2vec model to update.}
 }
 \value{
 a invisible list of paths to the trained models.

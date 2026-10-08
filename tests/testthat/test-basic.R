@@ -113,14 +113,15 @@ test_that("prep_data and train_models work", {
   skip_on_cran()
 
   withr::local_options(list(AWE.word2vec.iter = 1,
-                            AWE.word2vec.verbose = FALSE))
+                            AWE.word2vec.verbose = FALSE,
+                            AWE.save.internal = TRUE))
 
   d <- tempfile()
 
   # prepare
   expect_message(
     f <- prep_data(toks_test, data_anchors_topics$en, dim = 10, "en", dir = d),
-    ""
+    "Mapping words to anchors (en)", fixed = TRUE
   )
   map <- readRDS(f)
 
@@ -170,6 +171,26 @@ test_that("prep_data and train_models work", {
   expect_true(
     wov$tolower
   )
+
+  # re-train
+  file.remove(g)
+  wov_int <- readRDS(file.path(d, "word2vec_internal_k10.rds"))
+
+  expect_message(
+    h <- train_models(lang = "en", dir = d, dim = 10, model = wov_int),
+    "Training embeddings with anchors"
+  )
+  wov2 <- readRDS(h)
+
+  expect_identical(
+    class(wov2),
+    c("textmodel_word2vec", "textmodel_wordvector")
+  )
+
+  sim <- proxyC::simil(wov2$values$word, wov$values$word,
+                       diag = TRUE, sparse = FALSE)
+  expect_true(all(Matrix::diag(sim) > 0.90))
+
 
   # error
   expect_error(

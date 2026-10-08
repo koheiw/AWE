@@ -5,11 +5,12 @@
 #' @param lang0 language codes on which embeddings are trained. If `lang0` is not
 #'   different from `lang`, it is included in the file names.
 #' @param sample the proportion of the corpus used for training.
+#' @param model a trained word2vec model to update.
 #' @inheritParams prep_data
 #' @export
 #' @returns a invisible list of paths to the trained models.
 #' @import quanteda
-train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
+train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model = NULL) {
 
   if (!dir.exists(dir))
     stop(dir, " does not exist")
@@ -50,7 +51,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
     return(x)
   }))
   toks <- tokens_sample(toks, ndoc(toks), verbose = FALSE) # randomize
-  wov <- train_word2vec(toks, dim)
+  wov <- train_word2vec(toks, dim, model)
 
   if (getOption("AWE.save.internal", FALSE)) {
     e <- file.path(dir, paste0("word2vec_internal", "_k", dim, suffix, ".rds"))
@@ -71,14 +72,15 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang) {
   return(invisible(file))
 }
 
-train_word2vec <- function(x, dim) {
+train_word2vec <- function(x, dim, model = NULL) {
   wordvector::textmodel_word2vec(
     x,
     dim,
     tolower = getOption("AWE.word2vec.tolower", TRUE),
     verbose = getOption("AWE.word2vec.verbose", TRUE),
     iter = getOption("AWE.word2vec.iter", 10),
-    type = getOption("AWE.word2vec.type", "sg")
+    type = getOption("AWE.word2vec.type", "sg"),
+    model = model
   )
 }
 
