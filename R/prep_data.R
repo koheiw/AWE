@@ -85,6 +85,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   message(msg(" ...saving tokens (%s)", g))
   saveRDS(as.tokens(toks), g)
 
+  message(" ...complete")
   return(invisible(f))
 }
 

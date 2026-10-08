@@ -43,11 +43,13 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model
   toks <- do.call(c, lapply(lang0, function(l) {
     f <- file.path(dir, paste0("tokens_", l, "_k", dim, ".rds"))
     if (!file.exists(f))
-      stop(msg("Cannot find tokens (%s)", f))
-    message(msg(" ...loading data (%s)", f))
+      stop(msg("Cannot find %s tokens (%s)", l, f))
+    message(msg(" ...loading %s data (%s)", l, f))
     x <- as.tokens_xptr(readRDS(f))
     x <- tokens_sample(x, ndoc(x) * sample, verbose = FALSE)
     docnames(x) <- paste0(l, "_", docnames(x))
+    message(msg(" ......%s documents (%s tokens, %s types)",
+                ndoc(x), sum(ntoken(x)), length(types(x))))
     return(x)
   }))
   toks <- tokens_sample(toks, ndoc(toks), verbose = FALSE) # randomize
@@ -69,6 +71,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model
     message(msg(" ...saving %s model (%s)", p$lang, f))
     saveRDS(w, f)
   }
+  message(" ...complete")
   return(invisible(file))
 }
 
