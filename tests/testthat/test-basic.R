@@ -121,7 +121,7 @@ test_that("prep_data and train_models work", {
   # prepare
   expect_message(
     f <- prep_data(toks_test, data_anchors_topics$en, dim = 10, "en", dir = d),
-    "Mapping words to anchors (en)", fixed = TRUE
+    "Mapping 'en' words to anchors", fixed = TRUE
   )
   map <- readRDS(f)
 

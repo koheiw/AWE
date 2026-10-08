@@ -19,7 +19,7 @@ test_that("prep_data works", {
   # en
   expect_message(
     f_en <- prep_data(toks_en, data_anchors_topics$en, lang = "en", dir = d),
-    "Mapping words to anchors (en)", fixed = TRUE
+    "Mapping 'en' words to anchors", fixed = TRUE
   )
   expect_match(
     f_en,
@@ -33,7 +33,7 @@ test_that("prep_data works", {
   # de
   expect_message(
     f_de <- prep_data(toks_de, data_anchors_topics$de, lang = "de", dir = d),
-    "Mapping words to anchors (de)", fixed = TRUE
+    "Mapping 'de' words to anchors", fixed = TRUE
   )
   expect_match(
     f_de,
@@ -47,7 +47,7 @@ test_that("prep_data works", {
   # ja
   expect_message(
     f_ja <- prep_data(toks_ja, data_anchors_topics$ja, lang = "ja", dir = d),
-    "Mapping words to anchors (ja)", fixed = TRUE
+    "Mapping 'ja' words to anchors", fixed = TRUE
   )
   expect_match(
     f_ja,
@@ -67,7 +67,7 @@ test_that("train_models works", {
 
   expect_message(
     f1 <<- train_models(c("en", "de", "ja"), dir = d),
-    "Training embeddings with anchors (en, de, ja)", fixed = TRUE
+    "Training embeddings with anchors [en, de, ja]", fixed = TRUE
   )
   expect_message(
     train_models(c("en", "de", "ja"), dir = d),
@@ -81,7 +81,7 @@ test_that("train_models works", {
   # use lang0
   expect_message(
     f2 <<- train_models(c("en", "de", "ja"), dir = d, lang0 = c("en", "de")),
-    "Training embeddings with anchors (en, de, ja)", fixed = TRUE
+    "Training embeddings with anchors [en, de, ja]", fixed = TRUE
   )
   expect_match(
     f2,

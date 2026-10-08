@@ -34,7 +34,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   max_anchors <- check_integer(max_anchors, min = 1, max = 100)
   compound <- check_logical(compound)
 
-  message(msg("Mapping words to anchors (%s)", lang))
+  message(msg("Mapping '%s' words to anchors", lang))
 
   dir.create(dir, showWarnings = FALSE, recursive = TRUE)
   f <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))

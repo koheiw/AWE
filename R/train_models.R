@@ -23,7 +23,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model
   if (any(duplicated(lang)) || any(duplicated(lang0)))
     stop("The values of lang and lang0 must be unique")
 
-  message(msg("Training embeddings with anchors (%s)", paste0(lang, collapse = ", ")))
+  message(msg("Training embeddings with anchors [%s]", paste0(lang, collapse = ", ")))
   param <- expand.grid(lang = lang, dim = dim)
 
   # add lang0 to file names
@@ -43,8 +43,8 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model
   toks <- do.call(c, lapply(lang0, function(l) {
     f <- file.path(dir, paste0("tokens_", l, "_k", dim, ".rds"))
     if (!file.exists(f))
-      stop(msg("Cannot find %s tokens (%s)", l, f))
-    message(msg(" ...loading %s data (%s)", l, f))
+      stop(msg("Cannot find '%s' tokens (%s)", l, f))
+    message(msg(" ...loading '%s' tokens (%s)", l, f))
     x <- as.tokens_xptr(readRDS(f))
     x <- tokens_sample(x, ndoc(x) * sample, verbose = FALSE)
     docnames(x) <- paste0(l, "_", docnames(x))
@@ -68,7 +68,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model
     m <- readRDS(file.path(dir, paste0("map_", p$lang, "_k", p$dim, ".rds")))
     w <- create_word2vec(wov, m)
 
-    message(msg(" ...saving %s model (%s)", p$lang, f))
+    message(msg(" ...saving '%s' model (%s)", p$lang, f))
     saveRDS(w, f)
   }
   message(" ...complete")
