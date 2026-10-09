@@ -13,7 +13,8 @@ prep_data(
   vocab_size = 20000,
   min_simil = 0,
   max_anchors = 10,
-  compound = TRUE
+  compound = TRUE,
+  vocab_rank = c("tf", "tfidf")
 )
 }
 \arguments{

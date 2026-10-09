@@ -20,7 +20,7 @@
 #' @importFrom utils head
 #' @importFrom stats sd
 prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
-                      min_simil = 0, max_anchors = 10, compound = TRUE) {
+                      min_simil = 0, max_anchors = 10, compound = TRUE, vocab_rank = c("tf", "tfidf")) {
 
   if (!is.tokens(data))
     stop("data must be a tokens object")
@@ -33,6 +33,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   min_simil <- check_double(min_simil, min = 0, max = 1)
   max_anchors <- check_integer(max_anchors, min = 1, max = 100)
   compound <- check_logical(compound)
+  vocab_rank <- match.arg(vocab_rank)
 
   message(msg("Mapping '%s' words to anchors", lang))
 
@@ -58,6 +59,12 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 
   # NOTE: consider using tokens_annotate() to insert anchor tags.
   wov <- train_word2vec(data, dim)
+  if (vocab_rank == "tfidf") {
+    # TODO: use featfreq and docfreq
+    idf <- log(ndoc(data) / quanteda:::cpp_get_freq(data, boolean = TRUE), base = 10)
+    tfidf <- quanteda:::cpp_get_freq(data) * idf
+    wov$frequency <- tfidf[names(wov$frequency)]
+  }
   map <- create_map(wov, anchor, vocab_size, max_anchors, min_simil)
   if (nrow(map) == 0)
     stop("Failed in mapping words to anchors")
