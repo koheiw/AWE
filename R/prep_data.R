@@ -44,6 +44,8 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   }
 
   data <- as.tokens_xptr(data)
+  data <- tokens_subset(data, min_ntoken = 2)
+
   if (compound) {
     if (identical(concat(data), "")) {
       a <- as.list(tokens(anchor, verbose = FALSE))
