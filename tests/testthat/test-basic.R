@@ -178,7 +178,7 @@ test_that("prep_data and train_models work", {
 
   expect_message(
     h <- train_models(lang = "en", dir = d, dim = 10, model = wov_mod),
-    "Training embeddings with anchors"
+    "...initializing word2vec with an existing model", fixed = TRUE
   )
   wov2 <- readRDS(h)
 

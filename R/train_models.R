@@ -53,6 +53,11 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model
     return(x)
   }))
   toks <- tokens_sample(toks, ndoc(toks), verbose = FALSE) # randomize
+  if (!is.null(model)) {
+    message(msg(" ...initializing word2vec with an existing model"))
+    if (dim != model$dim)
+      stop("The values of dim must match between the model and data")
+  }
   wov <- train_word2vec(toks, dim, model)
 
   if (getOption("AWE.save.internal", FALSE)) {
