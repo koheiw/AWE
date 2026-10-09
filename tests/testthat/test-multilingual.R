@@ -27,7 +27,7 @@ test_that("prep_data works", {
   )
   expect_message(
     prep_data(toks_en, data_anchors_topics$en, lang = "en", dir = d),
-    paste0("Abort (", f_en[1], " already exists)"), fixed = TRUE
+    paste0(" ...abort (", f_en[1], " already exists)."), fixed = TRUE
   )
 
   # de
@@ -41,7 +41,7 @@ test_that("prep_data works", {
   )
   expect_message(
     prep_data(toks_de, data_anchors_topics$de, lang = "de", dir = d),
-    paste0("Abort (", f_de[1], " already exists)"), fixed = TRUE
+    paste0(" ...abort (", f_de[1], " already exists)."), fixed = TRUE
   )
 
   # ja
@@ -55,7 +55,7 @@ test_that("prep_data works", {
   )
   expect_message(
     prep_data(toks_ja, data_anchors_topics$ja, lang = "ja", dir = d),
-    paste0("Abort (", f_ja, " already exists)"), fixed = TRUE
+    paste0(" ...abort (", f_ja, " already exists)."), fixed = TRUE
   )
 
 })
@@ -71,7 +71,7 @@ test_that("train_models works", {
   )
   expect_message(
     train_models(c("en", "de", "ja"), dir = d),
-    paste0("Abort (", d, " contains all the models)"), fixed = TRUE
+    paste0(" ...abort (", d, " contains all the models)."), fixed = TRUE
   )
   expect_match(
     f1,
@@ -89,7 +89,7 @@ test_that("train_models works", {
   )
   expect_message(
     train_models(c("en", "de", "ja"), dir = d, lang0 = c("en", "de")),
-    paste0("Abort (", d, " contains all the models)"), fixed = TRUE
+    paste0(" ...abort (", d, " contains all the models)"), fixed = TRUE
   )
 
 })

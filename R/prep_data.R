@@ -39,7 +39,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   dir.create(dir, showWarnings = FALSE, recursive = TRUE)
   f <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))
   if (file.exists(f)) {
-    message(msg("Abort (%s already exists)", f))
+    message(msg(" ...abort (%s already exists).", f))
     return(invisible(f))
   }
 
@@ -86,7 +86,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   message(msg(" ...saving tokens (%s)", g))
   saveRDS(as.tokens(toks), g)
 
-  message(" ...complete")
+  message(" ...complete.")
   return(invisible(f))
 }
 

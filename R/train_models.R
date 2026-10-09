@@ -35,7 +35,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model
 
   file <- file.path(dir, paste0("word2vec_", param$lang, "_k", param$dim, suffix, ".rds"))
   if (length(file) && all(file.exists(file))) {
-    message(msg("Abort (%s contains all the models)", dir))
+    message(msg(" ...abort (%s contains all the models).", dir))
     return(invisible(file))
   }
 
@@ -76,7 +76,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model
     message(msg(" ...saving '%s' model (%s)", p$lang, f))
     saveRDS(w, f)
   }
-  message(" ...complete")
+  message(" ...complete.")
   return(invisible(file))
 }
 
