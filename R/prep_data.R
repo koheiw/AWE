@@ -76,7 +76,8 @@ prep_data <- function(data, anchor, lang, dir, dim = 100,
   attr(map, "k") <- dim
   attr(map, "language") <- lang
   attr(map, "concatenator") <- concat(data)
-  #attr(map, "vocab_size") <- vocab_size
+  attr(map, "vocab_size") <- vocab_size
+  attr(map, "vocab_rank") <- vocab_rank
   #attr(map, "min_simil") <- min_simil
   attr(map, "version") <- utils::packageVersion("AWE")
   rownames(map) <- NULL
