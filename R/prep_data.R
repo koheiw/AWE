@@ -8,6 +8,9 @@
 #' @param anchor words used as anchors to align embeddings.
 #' @param dir the path to a directory in which models will be saved.
 #' @param vocab_size the number of unique types of words in resulting embeddings.
+#' @param vocab_rank the ranking scheme of words. If `count`, words are sorted by
+#'   their simple raw frequency; if `tfidf`, raw counts are down-weighted by their
+#'   document frequency.
 #' @param dim the size of the word vectors.
 #' @param min_simil the minimum similarity to anchor words.
 #' @param max_anchors the maximum number of anchors for each word.
@@ -19,7 +22,8 @@
 #' @import quanteda
 #' @importFrom utils head
 #' @importFrom stats sd
-prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
+prep_data <- function(data, anchor, lang, dir, dim = 100,
+                      vocab_size = 20000, vocab_rank = c("count", "tfidf"),
                       min_simil = 0, max_anchors = 10, compound = TRUE) {
 
   if (!is.tokens(data))
@@ -33,6 +37,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   min_simil <- check_double(min_simil, min = 0, max = 1)
   max_anchors <- check_integer(max_anchors, min = 1, max = 100)
   compound <- check_logical(compound)
+  vocab_rank <- match.arg(vocab_rank)
 
   message(msg("Mapping '%s' words to anchors", lang))
 
@@ -58,6 +63,12 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
 
   # NOTE: consider using tokens_annotate() to insert anchor tags.
   wov <- train_word2vec(data, dim)
+  if (vocab_rank == "tfidf") {
+    # TODO: use featfreq and docfreq
+    idf <- log(ndoc(data) / quanteda:::cpp_get_freq(data, boolean = TRUE), base = 10)
+    tfidf <- quanteda:::cpp_get_freq(data) * idf
+    wov$frequency <- tfidf[names(wov$frequency)]
+  }
   map <- create_map(wov, anchor, vocab_size, max_anchors, min_simil)
   if (nrow(map) == 0)
     stop("Failed in mapping words to anchors")
@@ -65,7 +76,8 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   attr(map, "k") <- dim
   attr(map, "language") <- lang
   attr(map, "concatenator") <- concat(data)
-  #attr(map, "vocab_size") <- vocab_size
+  attr(map, "vocab_size") <- vocab_size
+  attr(map, "vocab_rank") <- vocab_rank
   #attr(map, "min_simil") <- min_simil
   attr(map, "version") <- utils::packageVersion("AWE")
   rownames(map) <- NULL

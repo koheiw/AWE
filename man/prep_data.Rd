@@ -11,6 +11,7 @@ prep_data(
   dir,
   dim = 100,
   vocab_size = 20000,
+  vocab_rank = c("count", "tfidf"),
   min_simil = 0,
   max_anchors = 10,
   compound = TRUE
@@ -29,6 +30,10 @@ accepted because it is used only to create file names for resulting objects.}
 \item{dim}{the size of the word vectors.}
 
 \item{vocab_size}{the number of unique types of words in resulting embeddings.}
+
+\item{vocab_rank}{the ranking scheme of words. If \code{count}, words are sorted by
+their simple raw frequency; if \code{tfidf}, raw counts are down-weighted by their
+document frequency.}
 
 \item{min_simil}{the minimum similarity to anchor words.}
 

@@ -60,6 +60,47 @@ test_that("prep_data works", {
 
 })
 
+test_that("vocab_rank works", {
+
+  withr::local_options(list(AWE.word2vec.iter = 1,
+                            AWE.word2vec.verbose = FALSE))
+
+  # count
+  d1 <- tempfile()
+  f1 <- prep_data(toks_en, data_anchors_topics$en, lang = "en", dir = d1,
+                   vocab_rank = "count")
+  map1 <- readRDS(f1)
+
+  expect_equal(
+    attr(map1, "vocab_size"),
+    20000
+  )
+  expect_equal(
+    attr(map1, "vocab_rank"),
+    "count"
+  )
+
+  # tfidf
+  d2 <- tempfile()
+  f2 <- prep_data(toks_en, data_anchors_topics$en, lang = "en", dir = d2,
+                  vocab_rank = "tfidf")
+  map2 <- readRDS(f2)
+  expect_equal(
+    attr(map2, "vocab_size"),
+    20000
+  )
+  expect_equal(
+    attr(map2, "vocab_rank"),
+    "tfidf"
+  )
+
+  # compare
+  expect_false(
+    setequal(map1$word, map2$word)
+  )
+
+})
+
 test_that("train_models works", {
 
   withr::local_options(list(AWE.word2vec.iter = 1,
