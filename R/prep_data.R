@@ -8,6 +8,9 @@
 #' @param anchor words used as anchors to align embeddings.
 #' @param dir the path to a directory in which models will be saved.
 #' @param vocab_size the number of unique types of words in resulting embeddings.
+#' @param vocab_rank the ranking scheme of words. If `count`, words are sorted by
+#'   their simple raw frequency; if `tfidf`, raw counts are down-weighted by their
+#'   document frequency.
 #' @param dim the size of the word vectors.
 #' @param min_simil the minimum similarity to anchor words.
 #' @param max_anchors the maximum number of anchors for each word.
@@ -19,8 +22,9 @@
 #' @import quanteda
 #' @importFrom utils head
 #' @importFrom stats sd
-prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
-                      min_simil = 0, max_anchors = 10, compound = TRUE, vocab_rank = c("tf", "tfidf")) {
+prep_data <- function(data, anchor, lang, dir, dim = 100,
+                      vocab_size = 20000, vocab_rank = c("count", "tfidf"),
+                      min_simil = 0, max_anchors = 10, compound = TRUE) {
 
   if (!is.tokens(data))
     stop("data must be a tokens object")
