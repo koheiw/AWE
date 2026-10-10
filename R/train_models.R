@@ -23,7 +23,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model
   if (any(duplicated(lang)) || any(duplicated(lang0)))
     stop("The values of lang and lang0 must be unique")
 
-  message(msg("Training embeddings with anchors [%s]", paste0(lang, collapse = ", ")))
+  message(msg("Training embeddings with anchors [%s]...", paste0(lang, collapse = ", ")))
   param <- expand.grid(lang = lang, dim = dim)
 
   # add lang0 to file names
@@ -36,6 +36,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model
   file <- file.path(dir, paste0("word2vec_", param$lang, "_k", param$dim, suffix, ".rds"))
   if (length(file) && all(file.exists(file))) {
     message(msg(" ...abort (%s contains all the models).", dir))
+    message("Finished training embeddings with anchors.")
     return(invisible(file))
   }
 
@@ -77,6 +78,7 @@ train_models <- function(lang, dir, dim = 100, sample = 0.1, lang0 = lang, model
     saveRDS(w, f)
   }
   message(" ...complete.")
+  message("Finished training embeddings with anchors.")
   return(invisible(file))
 }
 

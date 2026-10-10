@@ -34,12 +34,13 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   max_anchors <- check_integer(max_anchors, min = 1, max = 100)
   compound <- check_logical(compound)
 
-  message(msg("Mapping '%s' words to anchors", lang))
+  message(msg("Mapping '%s' words to anchors...", lang))
 
   dir.create(dir, showWarnings = FALSE, recursive = TRUE)
   f <- file.path(dir, paste0("map_", lang, "_k", dim, ".rds"))
   if (file.exists(f)) {
     message(msg(" ...abort (%s already exists).", f))
+    message("Finished mapping words to anchors.")
     return(invisible(f))
   }
 
@@ -87,6 +88,7 @@ prep_data <- function(data, anchor, lang, dir, dim = 100, vocab_size = 20000,
   saveRDS(as.tokens(toks), g)
 
   message(" ...complete.")
+  message("Finished mapping words to anchors.")
   return(invisible(f))
 }
 
