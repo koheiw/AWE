@@ -147,3 +147,24 @@ test_that("translate works", {
 
 })
 
+test_that("docid are preserved works", {
+
+  dov_en <- as.textmodel_doc2vec(toks_en, readRDS(f2[1]))
+  dov_de <- as.textmodel_doc2vec(toks_de, readRDS(f2[2]))
+  dov_ja <- as.textmodel_doc2vec(toks_ja, readRDS(f2[3]))
+  dov <- rbind(dov_en, dov_de, dov_ja)
+
+  expect_true(
+    is.factor(dov$docvars$docid_)
+  )
+  expect_true(
+    all(levels(docid(toks_en)) %in% levels(dov$docvars$docid_))
+  )
+  expect_true(
+    all(levels(docid(toks_de)) %in% levels(dov$docvars$docid_))
+  )
+  expect_true(
+    all(levels(docid(toks_ja)) %in% levels(dov$docvars$docid_))
+  )
+
+})
